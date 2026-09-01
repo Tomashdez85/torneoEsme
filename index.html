@@ -41,6 +41,18 @@
     .grid-form { display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 6px; margin-bottom: 10px; }
     input, select { background: #0f172a; border: 1px solid var(--border); color: white; padding: 8px; border-radius: 6px; font-size: 0.9rem; }
 
+    /* Contadores en Tiempo Real */
+    .counters-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px 0; }
+    @media (max-width: 600px) { .counters-grid { grid-template-columns: 1fr; } }
+    .counter-card { background: #0f172a; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; }
+    .counter-card.boys { border-left: 4px solid #38bdf8; }
+    .counter-card.girls { border-left: 4px solid #f472b6; }
+    .counter-header { display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 0.95rem; margin-bottom: 6px; }
+    .counter-badges { display: flex; gap: 6px; font-size: 0.75rem; flex-wrap: wrap; }
+    .pill { background: #1e293b; padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border); }
+    .pill strong { color: var(--accent); }
+    .ready-tag { color: var(--accent); font-weight: bold; }
+
     .player-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 6px; margin-top: 10px; max-height: 220px; overflow-y: auto; }
     .player-badge { background: #334155; padding: 6px 8px; border-radius: 4px; font-size: 0.8rem; display: flex; justify-content: space-between; align-items: center; }
 
@@ -115,12 +127,38 @@
 <div class="container">
   <h1>🎾 Torneo Pádel Mixto Express</h1>
 
-  <!-- PANTALLA 1: REGISTRO DE JUGADORES -->
+  <!-- PANTALLA 1: REGISTRO DE JUGADORES (CON CONTADORES EN DIRECTO) -->
   <div id="setup-section" class="card">
     <h2>1. Registro de Jugadores (<span id="player-count">0</span>/32)</h2>
-    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px; text-align: center;">
-      16 chicos y 16 chicas. Usa <strong>Polivalente 🔄</strong> si juegan en ambos lados.
-    </p>
+    
+    <!-- CONTADORES EN TIEMPO REAL -->
+    <div class="counters-grid">
+      <!-- Tarjeta Chicos -->
+      <div class="counter-card boys">
+        <div class="counter-header">
+          <span style="color: #38bdf8;">👦 Chicos: <span id="count-boys-total">0</span>/16</span>
+          <span id="badge-boys-ready" style="font-size: 0.8rem;"></span>
+        </div>
+        <div class="counter-badges">
+          <span class="pill">Revés: <strong id="count-boys-reves">0</strong></span>
+          <span class="pill">Drive: <strong id="count-boys-drive">0</strong></span>
+          <span class="pill">Poliv 🔄: <strong id="count-boys-poli">0</strong></span>
+        </div>
+      </div>
+
+      <!-- Tarjeta Chicas -->
+      <div class="counter-card girls">
+        <div class="counter-header">
+          <span style="color: #f472b6;">👧 Chicas: <span id="count-girls-total">0</span>/16</span>
+          <span id="badge-girls-ready" style="font-size: 0.8rem;"></span>
+        </div>
+        <div class="counter-badges">
+          <span class="pill">Drive: <strong id="count-girls-drive">0</strong></span>
+          <span class="pill">Revés: <strong id="count-girls-reves">0</strong></span>
+          <span class="pill">Poliv 🔄: <strong id="count-girls-poli">0</strong></span>
+        </div>
+      </div>
+    </div>
 
     <div class="grid-form">
       <input type="text" id="p-name" placeholder="Nombre jugador/a">
@@ -221,10 +259,8 @@
       
       <!-- COLUMNA PRINCIPAL (RONDAS / FASES FINALES) -->
       <div class="main-column">
-        <!-- Vista de Rondas Clasificatorias -->
         <div id="round-view" class="card"></div>
 
-        <!-- Vista de Fases Finales -->
         <div id="finals-view" class="card hidden">
           <h2>🏆 Fases Finales</h2>
           <div id="finals-content"></div>
@@ -288,7 +324,7 @@
   };
 
   window.onload = () => {
-    const saved = localStorage.getItem('padel_torneo_data_v7');
+    const saved = localStorage.getItem('padel_torneo_data_v8');
     if (saved) {
       state = JSON.parse(saved);
       if (state.locked && state.pairs.length === 16) {
@@ -303,19 +339,26 @@
   };
 
   function saveState() {
-    localStorage.setItem('padel_torneo_data_v7', JSON.stringify(state));
+    localStorage.setItem('padel_torneo_data_v8', JSON.stringify(state));
   }
 
   function addPlayer() {
-    const name = document.getElementById('p-name').value.trim();
+    const nameInput = document.getElementById('p-name');
+    const name = nameInput.value.trim();
     const gender = document.getElementById('p-gender').value;
     const pos = document.getElementById('p-pos').value;
 
     if (!name) return alert('Escribe un nombre');
     if (state.players.length >= 32) return alert('Límite de 32 jugadores alcanzado');
 
+    const totalGender = state.players.filter(p => p.gender === gender).length;
+    if (totalGender >= 16) {
+      return alert(`Ya hay 16 ${gender === 'H' ? 'chicos' : 'chicas'} registrados.`);
+    }
+
     state.players.push({ name, gender, pos });
-    document.getElementById('p-name').value = '';
+    nameInput.value = '';
+    nameInput.focus();
     renderPlayers();
     saveState();
   }
@@ -325,6 +368,32 @@
     state.players.splice(idx, 1);
     renderPlayers();
     saveState();
+  }
+
+  function updateCounters() {
+    const boys = state.players.filter(p => p.gender === 'H');
+    const girls = state.players.filter(p => p.gender === 'M');
+
+    const bReves = boys.filter(p => p.pos === 'Reves').length;
+    const bDrive = boys.filter(p => p.pos === 'Drive').length;
+    const bPoli  = boys.filter(p => p.pos === 'Polivalente').length;
+
+    const gDrive = girls.filter(p => p.pos === 'Drive').length;
+    const gReves = girls.filter(p => p.pos === 'Reves').length;
+    const gPoli  = girls.filter(p => p.pos === 'Polivalente').length;
+
+    document.getElementById('count-boys-total').innerText = boys.length;
+    document.getElementById('count-boys-reves').innerText = bReves;
+    document.getElementById('count-boys-drive').innerText = bDrive;
+    document.getElementById('count-boys-poli').innerText = bPoli;
+
+    document.getElementById('count-girls-total').innerText = girls.length;
+    document.getElementById('count-girls-drive').innerText = gDrive;
+    document.getElementById('count-girls-reves').innerText = gReves;
+    document.getElementById('count-girls-poli').innerText = gPoli;
+
+    document.getElementById('badge-boys-ready').innerHTML = boys.length === 16 ? '<span class="ready-tag">✓ Completo</span>' : '';
+    document.getElementById('badge-girls-ready').innerHTML = girls.length === 16 ? '<span class="ready-tag">✓ Completo</span>' : '';
   }
 
   function renderPlayers() {
@@ -338,6 +407,7 @@
       container.appendChild(badge);
     });
     document.getElementById('player-count').innerText = state.players.length;
+    updateCounters();
   }
 
   function shuffle(arr) { return arr.sort(() => Math.random() - 0.5); }
@@ -347,7 +417,7 @@
     const chicas = state.players.filter(p => p.gender === 'M');
 
     if (chicos.length !== 16 || chicas.length !== 16) {
-      alert(`Deben ser 16 chicos y 16 chicas (hay ${chicos.length} chicos y ${chicas.length} chicas).`);
+      alert(`Deben ser exactamente 16 chicos y 16 chicas (Actualmente: ${chicos.length} chicos y ${chicas.length} chicas).`);
       return false;
     }
 
@@ -359,7 +429,7 @@
     let chicasDrive = shuffle(chicas.filter(p => p.pos === 'Drive'));
     let chicasPoli  = shuffle(chicas.filter(p => p.pos === 'Polivalente'));
 
-    // Balanceo con polivalentes
+    // Balanceo de comodines polivalentes
     while (chicasPoli.length > 0) {
       const p = chicasPoli.pop();
       if ((chicosReves.length - chicasDrive.length) > (chicosDrive.length - chicasReves.length)) {
@@ -847,7 +917,7 @@
   function confirmReset() {
     if (confirm('¿ATENCIÓN: Quieres borrar los resultados y reiniciar el torneo?')) {
       if (confirm('¿Confirmas de verdad? Esta acción no se puede deshacer.')) {
-        localStorage.removeItem('padel_torneo_data_v7');
+        localStorage.removeItem('padel_torneo_data_v8');
         location.reload();
       }
     }
