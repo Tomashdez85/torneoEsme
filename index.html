@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Torneo Pádel Mixto - 6 Pistas</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --accent: #10b981;
+      --accent-hover: #059669;
+      --gold: #f59e0b;
+      --silver: #94a3b8;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #334155;
+      --descanso-bg: #334155;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); padding: 12px; }
+    .container { max-width: 900px; margin: 0 auto; }
+
+    h1, h2, h3 { text-align: center; margin-bottom: 12px; }
+    h1 { color: var(--accent); font-size: 1.6rem; }
+    
+    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 15px; margin-bottom: 15px; }
+    .btn { background: var(--accent); color: white; border: none; padding: 10px 15px; border-radius: 6px; font-size: 0.95rem; font-weight: bold; cursor: pointer; width: 100%; transition: background 0.2s; }
+    .btn:hover { background: var(--accent-hover); }
+    .btn-secondary { background: #475569; margin-top: 10px; }
+    .btn-secondary:hover { background: #334155; }
+    .btn-danger { background: #dc2626; margin-top: 15px; }
+    .btn-danger:hover { background: #b91c1c; }
+
+    .grid-form { display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 6px; margin-bottom: 10px; }
+    input, select { background: #0f172a; border: 1px solid var(--border); color: white; padding: 8px; border-radius: 6px; font-size: 0.9rem; }
+
+    .player-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 6px; margin-top: 10px; max-height: 220px; overflow-y: auto; }
+    .player-badge { background: #334155; padding: 6px 8px; border-radius: 4px; font-size: 0.8rem; display: flex; justify-content: space-between; }
+
+    .tabs { display: flex; gap: 6px; overflow-x: auto; margin-bottom: 15px; padding-bottom: 4px; }
+    .tab-btn { background: var(--card-bg); border: 1px solid var(--border); color: var(--text-muted); padding: 8px 12px; border-radius: 6px; cursor: pointer; white-space: nowrap; font-size: 0.85rem; }
+    .tab-btn.active { background: var(--accent); color: white; font-weight: bold; border-color: var(--accent); }
+    .tab-btn.gold { border-color: var(--gold); color: #fde68a; }
+    .tab-btn.gold.active { background: var(--gold); color: #000; }
+
+    .match-card { background: #0f172a; border: 1px solid var(--border); border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+    .pista-header { display: flex; justify-content: space-between; font-weight: bold; color: #38bdf8; margin-bottom: 6px; font-size: 0.85rem; }
+    .match-body { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .team { flex: 1; font-size: 0.9rem; }
+    .team.right { text-align: right; }
+    .score-select { width: 62px; text-align: center; font-size: 1rem; font-weight: bold; padding: 4px; background: #1e293b; color: #38bdf8; border: 1px solid var(--border); border-radius: 4px; }
+
+    .descansos { background: var(--descanso-bg); color: #cbd5e1; padding: 8px 12px; border-radius: 6px; font-size: 0.85rem; margin-top: 10px; }
+
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; text-align: left; }
+    th, td { padding: 8px; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+    th { background: #0f172a; color: var(--text-muted); }
+    
+    .top4-row { background: rgba(245, 158, 11, 0.12); }
+    .consolation-row { background: rgba(148, 163, 184, 0.1); }
+    
+    .tag-badge { font-size: 0.7rem; padding: 2px 5px; border-radius: 3px; margin-left: 4px; font-weight: bold; }
+    .tag-gold { background: var(--gold); color: #000; }
+    .tag-silver { background: #64748b; color: #fff; }
+
+    .bracket-section { border-left: 3px solid var(--border); padding-left: 10px; margin-bottom: 20px; }
+    .bracket-gold { border-left-color: var(--gold); }
+    .bracket-silver { border-left-color: var(--silver); }
+
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>🎾 Torneo Pádel Mixto Express</h1>
+
+  <!-- SECCIÓN 1: REGISTRO (Se bloquea tras iniciar) -->
+  <div id="setup-section" class="card">
+    <h2>1. Registro de Jugadores (<span id="player-count">0</span>/32)</h2>
+    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px; text-align: center;">
+      Se requieren 16 chicos (Drive/Revés) y 16 chicas (Drive/Revés).
+    </p>
+
+    <div class="grid-form">
+      <input type="text" id="p-name" placeholder="Nombre jugador/a">
+      <select id="p-gender">
+        <option value="H">Chico</option>
+        <option value="M">Chica</option>
+      </select>
+      <select id="p-pos">
+        <option value="Reves">Revés</option>
+        <option value="Drive">Drive</option>
+      </select>
+      <button class="btn" style="width: auto;" onclick="addPlayer()">Añadir</button>
+    </div>
+    
+    <div class="player-list" id="players-container"></div>
+
+    <div style="margin-top: 15px; display: flex; gap: 8px;">
+      <button class="btn" onclick="generateTournament()">🔒 Iniciar Torneo y Fijar Cuadro</button>
+      <button class="btn btn-secondary" style="width: auto;" onclick="loadDemoData()">Demo (32)</button>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 2: TORNEO BLOQUEADO Y EN CURSO -->
+  <div id="tournament-section" class="hidden">
+    <div class="tabs" id="tabs-container"></div>
+
+    <!-- Vista de Rondas Clasificatorias -->
+    <div id="round-view" class="card"></div>
+
+    <!-- Vista de Clasificación -->
+    <div id="standings-view" class="card hidden">
+      <h2>📊 Clasificación General</h2>
+      <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px; text-align: center;">
+        1º al 4º pasan a <strong>Fase Final (Oro)</strong> | 5º al 8º pasan a <strong>Consolación (Plata)</strong>
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Pareja</th>
+            <th>PJ</th>
+            <th>PG</th>
+            <th>PE</th>
+            <th>PP</th>
+            <th>Pts</th>
+            <th>Dif (JF-JC)</th>
+          </tr>
+        </thead>
+        <tbody id="standings-body"></tbody>
+      </table>
+    </div>
+
+    <!-- Vista de Fase Final (Oro y Consolación) -->
+    <div id="finals-view" class="card hidden">
+      <h2>🏆 Fases Finales</h2>
+      <div id="finals-content"></div>
+    </div>
+
+    <button class="btn btn-danger" onclick="confirmReset()">⚠️ Reiniciar Todo el Torneo</button>
+  </div>
+</div>
+
+<script>
+  // Calendario precalculado 6 rondas, 6 pistas simultáneas, 4 descansan
+  const SCHEDULE = [
+    { ronda: 1, partidos: [[1, 2], [3, 4], [5, 6], [7, 8], [9, 10], [11, 12]], descansan: [13, 14, 15, 16] },
+    { ronda: 2, partidos: [[13, 1], [14, 3], [15, 5], [16, 7], [2, 9], [4, 11]], descansan: [6, 8, 10, 12] },
+    { ronda: 3, partidos: [[6, 13], [8, 14], [10, 15], [12, 16], [1, 4], [3, 2]], descansan: [5, 7, 9, 11] },
+    { ronda: 4, partidos: [[5, 12], [7, 10], [9, 8], [11, 6], [13, 2], [14, 4]], descansan: [1, 3, 15, 16] },
+    { ronda: 5, partidos: [[15, 1], [16, 3], [5, 14], [7, 13], [9, 12], [11, 10]], descansan: [2, 4, 6, 8] },
+    { ronda: 6, partidos: [[2, 15], [4, 16], [6, 1], [8, 3], [10, 5], [12, 7]], descansan: [9, 11, 13, 14] }
+  ];
+
+  let state = {
+    locked: false,
+    players: [],
+    pairs: [],
+    scores: {}, // "r-p" -> { j1: "", j2: "" }
+    finalScores: {
+      sf1: { j1: '', j2: '' },
+      sf2: { j1: '', j2: '' },
+      final: { j1: '', j2: '' },
+      bronze: { j1: '', j2: '' },
+      cons_sf1: { j1: '', j2: '' },
+      cons_sf2: { j1: '', j2: '' },
+      cons_final: { j1: '', j2: '' }
+    },
+    activeTab: 'r1'
+  };
+
+  window.onload = () => {
+    const saved = localStorage.getItem('padel_torneo_data_v3');
+    if (saved) {
+      state = JSON.parse(saved);
+      if (state.locked && state.pairs.length === 16) {
+        showTournament();
+        return;
+      }
+    }
+    renderPlayers();
+  };
+
+  function saveState() {
+    localStorage.setItem('padel_torneo_data_v3', JSON.stringify(state));
+  }
+
+  function addPlayer() {
+    const name = document.getElementById('p-name').value.trim();
+    const gender = document.getElementById('p-gender').value;
+    const pos = document.getElementById('p-pos').value;
+
+    if (!name) return alert('Escribe un nombre');
+    if (state.players.length >= 32) return alert('Límite de 32 jugadores alcanzado');
+
+    state.players.push({ name, gender, pos });
+    document.getElementById('p-name').value = '';
+    renderPlayers();
+    saveState();
+  }
+
+  function removePlayer(idx) {
+    if (state.locked) return;
+    state.players.splice(idx, 1);
+    renderPlayers();
+    saveState();
+  }
+
+  function renderPlayers() {
+    const container = document.getElementById('players-container');
+    container.innerHTML = '';
+    state.players.forEach((p, index) => {
+      const badge = document.createElement('div');
+      badge.className = 'player-badge';
+      badge.innerHTML = `<span>${p.name} (${p.gender === 'H' ? 'Chico' : 'Chica'} - ${p.pos})</span>
+                         <span style="cursor:pointer; color:#f87171;" onclick="removePlayer(${index})">&times;</span>`;
+      container.appendChild(badge);
+    });
+    document.getElementById('player-count').innerText = state.players.length;
+  }
+
+  function generateTournament() {
+    if (state.players.length !== 32) {
+      return alert('Se necesitan exactamente 32 jugadores.');
+    }
+
+    const chicos = state.players.filter(p => p.gender === 'H');
+    const chicas = state.players.filter(p => p.gender === 'M');
+
+    if (chicos.length !== 16 || chicas.length !== 16) {
+      return alert(`Deben ser 16 chicos y 16 chicas (hay ${chicos.length} chicos y ${chicas.length} chicas).`);
+    }
+
+    let chicosReves = shuffle(chicos.filter(p => p.pos === 'Reves'));
+    let chicosDrive = shuffle(chicos.filter(p => p.pos === 'Drive'));
+    let chicasReves = shuffle(chicas.filter(p => p.pos === 'Reves'));
+    let chicasDrive = shuffle(chicas.filter(p => p.pos === 'Drive'));
+
+    // Ajuste equilibrado de lados
+    while (chicosReves.length > chicasDrive.length && chicosReves.length > 0) chicosDrive.push(chicosReves.pop());
+    while (chicosDrive.length > chicasReves.length && chicosDrive.length > 0) chicosReves.push(chicosDrive.pop());
+    while (chicasDrive.length > chicosReves.length && chicasDrive.length > 0) chicasReves.push(chicasDrive.pop());
+    while (chicasReves.length > chicosDrive.length && chicasReves.length > 0) chicasDrive.push(chicasReves.pop());
+
+    const pairs = [];
+    const t1 = Math.min(chicosReves.length, chicasDrive.length);
+    for (let i = 0; i < t1; i++) pairs.push({ id: pairs.length + 1, p1: chicosReves[i], p2: chicasDrive[i] });
+    const t2 = Math.min(chicosDrive.length, chicasReves.length);
+    for (let i = 0; i < t2; i++) pairs.push({ id: pairs.length + 1, p1: chicosDrive[i], p2: chicasReves[i] });
+
+    state.pairs = pairs;
+    state.scores = {};
+    state.finalScores = {
+      sf1: { j1: '', j2: '' },
+      sf2: { j1: '', j2: '' },
+      final: { j1: '', j2: '' },
+      bronze: { j1: '', j2: '' },
+      cons_sf1: { j1: '', j2: '' },
+      cons_sf2: { j1: '', j2: '' },
+      cons_final: { j1: '', j2: '' }
+    };
+    state.locked = true;
+    state.activeTab = 'r1';
+    saveState();
+    showTournament();
+  }
+
+  function shuffle(arr) { return arr.sort(() => Math.random() - 0.5); }
+
+  function showTournament() {
+    document.getElementById('setup-section').classList.add('hidden');
+    document.getElementById('tournament-section').classList.remove('hidden');
+    renderTabs();
+    renderContent();
+  }
+
+  function renderTabs() {
+    const container = document.getElementById('tabs-container');
+    container.innerHTML = '';
+
+    for (let r = 1; r <= 6; r++) {
+      const btn = document.createElement('button');
+      btn.className = `tab-btn ${state.activeTab === 'r' + r ? 'active' : ''}`;
+      btn.innerText = `Ronda ${r}`;
+      btn.onclick = () => { state.activeTab = 'r' + r; renderTabs(); renderContent(); };
+      container.appendChild(btn);
+    }
+
+    const stBtn = document.createElement('button');
+    stBtn.className = `tab-btn ${state.activeTab === 'standings' ? 'active' : ''}`;
+    stBtn.innerText = `📊 Clasificación`;
+    stBtn.onclick = () => { state.activeTab = 'standings'; renderTabs(); renderContent(); };
+    container.appendChild(stBtn);
+
+    const fnBtn = document.createElement('button');
+    fnBtn.className = `tab-btn gold ${state.activeTab === 'finals' ? 'active' : ''}`;
+    fnBtn.innerText = `🏆 Fases Finales`;
+    fnBtn.onclick = () => { state.activeTab = 'finals'; renderTabs(); renderContent(); };
+    container.appendChild(fnBtn);
+  }
+
+  function getScoreOptions(selectedVal) {
+    let options = `<option value="">-</option>`;
+    for (let i = 0; i <= 15; i++) {
+      options += `<option value="${i}" ${selectedVal === i.toString() || selectedVal === i ? 'selected' : ''}>${i}</option>`;
+    }
+    return options;
+  }
+
+  function renderContent() {
+    document.getElementById('round-view').classList.add('hidden');
+    document.getElementById('standings-view').classList.add('hidden');
+    document.getElementById('finals-view').classList.add('hidden');
+
+    if (state.activeTab === 'standings') {
+      document.getElementById('standings-view').classList.remove('hidden');
+      renderStandingsTable();
+    } else if (state.activeTab === 'finals') {
+      document.getElementById('finals-view').classList.remove('hidden');
+      renderFinals();
+    } else {
+      const roundView = document.getElementById('round-view');
+      roundView.classList.remove('hidden');
+      const roundNum = parseInt(state.activeTab.replace('r', ''));
+      const roundData = SCHEDULE.find(s => s.ronda === roundNum);
+
+      let html = `<h2>Ronda ${roundNum} (20 min + 5 min cambio)</h2>`;
+
+      roundData.partidos.forEach((p, idx) => {
+        const t1 = state.pairs.find(pair => pair.id === p[0]);
+        const t2 = state.pairs.find(pair => pair.id === p[1]);
+        const key = `${roundNum}-${idx}`;
+        const score = state.scores[key] || { j1: '', j2: '' };
+
+        html += `
+          <div class="match-card">
+            <div class="pista-header"><span>PISTA ${idx + 1}</span></div>
+            <div class="match-body">
+              <div class="team"><strong>P${t1.id}:</strong> ${t1.p1.name} & ${t1.p2.name}</div>
+              <select class="score-select" onchange="updateScore('${key}', 'j1', this.value)">
+                ${getScoreOptions(score.j1)}
+              </select>
+              <span>vs</span>
+              <select class="score-select" onchange="updateScore('${key}', 'j2', this.value)">
+                ${getScoreOptions(score.j2)}
+              </select>
+              <div class="team right"><strong>P${t2.id}:</strong> ${t2.p1.name} & ${t2.p2.name}</div>
+            </div>
+          </div>
+        `;
+      });
+
+      const desc = roundData.descansan.map(id => {
+        const t = state.pairs.find(pair => pair.id === id);
+        return `<strong>P${t.id}</strong> (${t.p1.name}/${t.p2.name})`;
+      }).join(', ');
+
+      html += `<div class="descansos">☕ <strong>Descansan:</strong> ${desc}</div>`;
+      roundView.innerHTML = html;
+    }
+  }
+
+  function updateScore(key, side, val) {
+    if (!state.scores[key]) state.scores[key] = { j1: '', j2: '' };
+    state.scores[key][side] = val;
+    saveState();
+  }
+
+  function calculateStandings() {
+    const stats = state.pairs.map(p => ({
+      id: p.id,
+      pairObj: p,
+      name: `P${p.id}: ${p.p1.name} & ${p.p2.name}`,
+      pj: 0, pg: 0, pe: 0, pp: 0, jf: 0, jc: 0, pts: 0, dif: 0
+    }));
+
+    SCHEDULE.forEach(r => {
+      r.partidos.forEach((p, idx) => {
+        const sc = state.scores[`${r.ronda}-${idx}`];
+        if (sc && sc.j1 !== '' && sc.j2 !== '' && !isNaN(sc.j1) && !isNaN(sc.j2)) {
+          const t1 = stats.find(t => t.id === p[0]);
+          const t2 = stats.find(t => t.id === p[1]);
+          const j1 = parseInt(sc.j1, 10);
+          const j2 = parseInt(sc.j2, 10);
+
+          t1.pj++; t2.pj++;
+          t1.jf += j1; t1.jc += j2;
+          t2.jf += j2; t2.jc += j1;
+
+          if (j1 > j2) { t1.pg++; t1.pts += 3; t2.pp++; }
+          else if (j1 < j2) { t2.pg++; t2.pts += 3; t1.pp++; }
+          else { t1.pe++; t1.pts += 1; t2.pe++; t2.pts += 1; }
+        }
+      });
+    });
+
+    stats.forEach(t => t.dif = t.jf - t.jc);
+    stats.sort((a, b) => b.pts - a.pts || b.dif - a.dif || b.jf - a.jf);
+    return stats;
+  }
+
+  function renderStandingsTable() {
+    const standings = calculateStandings();
+    const tbody = document.getElementById('standings-body');
+    tbody.innerHTML = '';
+
+    standings.forEach((t, i) => {
+      let rowClass = '';
+      let tagHtml = '';
+      if (i < 4) {
+        rowClass = 'top4-row';
+        tagHtml = '<span class="tag-badge tag-gold">Oro</span>';
+      } else if (i < 8) {
+        rowClass = 'consolation-row';
+        tagHtml = '<span class="tag-badge tag-silver">Plata</span>';
+      }
+
+      tbody.innerHTML += `
+        <tr class="${rowClass}">
+          <td><strong>${i + 1}º</strong></td>
+          <td>${t.name} ${tagHtml}</td>
+          <td>${t.pj}</td>
+          <td>${t.pg}</td>
+          <td>${t.pe}</td>
+          <td>${t.pp}</td>
+          <td><strong>${t.pts}</strong></td>
+          <td>${t.dif > 0 ? '+' : ''}${t.dif} (${t.jf}-${t.jc})</td>
+        </tr>
+      `;
+    });
+  }
+
+  function updateFinalScore(matchKey, side, val) {
+    if (!state.finalScores[matchKey]) state.finalScores[matchKey] = { j1: '', j2: '' };
+    state.finalScores[matchKey][side] = val;
+    saveState();
+    renderFinals();
+  }
+
+  function renderFinals() {
+    const standings = calculateStandings();
+    const [p1, p2, p3, p4, p5, p6, p7, p8] = standings;
+
+    const f = state.finalScores;
+
+    // LÓGICA CUADRO DE ORO (1º al 4º)
+    let wSF1 = null, lSF1 = null, wSF2 = null, lSF2 = null, champGold = null;
+    if (f.sf1.j1 !== '' && f.sf1.j2 !== '') {
+      if (parseInt(f.sf1.j1) > parseInt(f.sf1.j2)) { wSF1 = p1; lSF1 = p4; }
+      else if (parseInt(f.sf1.j2) > parseInt(f.sf1.j1)) { wSF1 = p4; lSF1 = p1; }
+    }
+    if (f.sf2.j1 !== '' && f.sf2.j2 !== '') {
+      if (parseInt(f.sf2.j1) > parseInt(f.sf2.j2)) { wSF2 = p2; lSF2 = p3; }
+      else if (parseInt(f.sf2.j2) > parseInt(f.sf2.j1)) { wSF2 = p3; lSF2 = p2; }
+    }
+    if (wSF1 && wSF2 && f.final.j1 !== '' && f.final.j2 !== '') {
+      if (parseInt(f.final.j1) > parseInt(f.final.j2)) champGold = wSF1;
+      else if (parseInt(f.final.j2) > parseInt(f.final.j1)) champGold = wSF2;
+    }
+
+    // LÓGICA CUADRO DE PLATA / CONSOLACIÓN (5º al 8º)
+    let wCSF1 = null, wCSF2 = null, champSilver = null;
+    if (f.cons_sf1.j1 !== '' && f.cons_sf1.j2 !== '') {
+      if (parseInt(f.cons_sf1.j1) > parseInt(f.cons_sf1.j2)) wCSF1 = p5;
+      else if (parseInt(f.cons_sf1.j2) > parseInt(f.cons_sf1.j1)) wCSF1 = p8;
+    }
+    if (f.cons_sf2.j1 !== '' && f.cons_sf2.j2 !== '') {
+      if (parseInt(f.cons_sf2.j1) > parseInt(f.cons_sf2.j2)) wCSF2 = p6;
+      else if (parseInt(f.cons_sf2.j2) > parseInt(f.cons_sf2.j1)) wCSF2 = p7;
+    }
+    if (wCSF1 && wCSF2 && f.cons_final.j1 !== '' && f.cons_final.j2 !== '') {
+      if (parseInt(f.cons_final.j1) > parseInt(f.cons_final.j2)) champSilver = wCSF1;
+      else if (parseInt(f.cons_final.j2) > parseInt(f.cons_final.j1)) champSilver = wCSF2;
+    }
+
+    let html = `
+      <!-- CUADRO PRINCIPAL (ORO) -->
+      <div class="bracket-section bracket-gold">
+        <h3 style="color: var(--gold); text-align: left;">🥇 Cuadro de Honor (Puestos 1º al 4º)</h3>
+        
+        <div class="match-card">
+          <div class="pista-header"><span>SEMIFINAL 1 (1º vs 4º)</span></div>
+          <div class="match-body">
+            <div class="team"><strong>${p1.name}</strong> (1º)</div>
+            <select class="score-select" onchange="updateFinalScore('sf1', 'j1', this.value)">
+              ${getScoreOptions(f.sf1.j1)}
+            </select>
+            <span>vs</span>
+            <select class="score-select" onchange="updateFinalScore('sf1', 'j2', this.value)">
+              ${getScoreOptions(f.sf1.j2)}
+            </select>
+            <div class="team right"><strong>${p4.name}</strong> (4º)</div>
+          </div>
+        </div>
+
+        <div class="match-card">
+          <div class="pista-header"><span>SEMIFINAL 2 (2º vs 3º)</span></div>
+          <div class="match-body">
+            <div class="team"><strong>${p2.name}</strong> (2º)</div>
+            <select class="score-select" onchange="updateFinalScore('sf2', 'j1', this.value)">
+              ${getScoreOptions(f.sf2.j1)}
+            </select>
+            <span>vs</span>
+            <select class="score-select" onchange="updateFinalScore('sf2', 'j2', this.value)">
+              ${getScoreOptions(f.sf2.j2)}
+            </select>
+            <div class="team right"><strong>${p3.name}</strong> (3º)</div>
+          </div>
+        </div>
+
+        <div class="match-card" style="border-color: var(--gold);">
+          <div class="pista-header"><span style="color: var(--gold);">👑 GRAN FINAL DE ORO</span></div>
+          <div class="match-body">
+            <div class="team">${wSF1 ? `<strong>${wSF1.name}</strong>` : '<em>Ganador SF1</em>'}</div>
+            <select class="score-select" ${!wSF1 || !wSF2 ? 'disabled' : ''} onchange="updateFinalScore('final', 'j1', this.value)">
+              ${getScoreOptions(f.final.j1)}
+            </select>
+            <span>vs</span>
+            <select class="score-select" ${!wSF1 || !wSF2 ? 'disabled' : ''} onchange="updateFinalScore('final', 'j2', this.value)">
+              ${getScoreOptions(f.final.j2)}
+            </select>
+            <div class="team right">${wSF2 ? `<strong>${wSF2.name}</strong>` : '<em>Ganador SF2</em>'}</div>
+          </div>
+        </div>
+
+        ${champGold ? `<div class="descansos" style="background: rgba(245, 158, 11, 0.2); border: 1px solid var(--gold); text-align: center; font-size: 1.05rem; color: #fde68a; margin-bottom: 10px;">🎉 <strong>¡CAMPEONES DE ORO!</strong>: ${champGold.name} 🎉</div>` : ''}
+
+        <div class="match-card">
+          <div class="pista-header"><span>🥉 3º y 4º PUESTO</span></div>
+          <div class="match-body">
+            <div class="team">${lSF1 ? `<strong>${lSF1.name}</strong>` : '<em>Perdedor SF1</em>'}</div>
+            <select class="score-select" ${!lSF1 || !lSF2 ? 'disabled' : ''} onchange="updateFinalScore('bronze', 'j1', this.value)">
+              ${getScoreOptions(f.bronze.j1)}
+            </select>
+            <span>vs</span>
+            <select class="score-select" ${!lSF1 || !lSF2 ? 'disabled' : ''} onchange="updateFinalScore('bronze', 'j2', this.value)">
+              ${getScoreOptions(f.bronze.j2)}
+            </select>
+            <div class="team right">${lSF2 ? `<strong>${lSF2.name}</strong>` : '<em>Perdedor SF2</em>'}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CUADRO DE CONSOLACIÓN (PLATA) -->
+      <div class="bracket-section bracket-silver">
+        <h3 style="color: #94a3b8; text-align: left;">🥈 Cuadro de Consolación (Puestos 5º al 8º)</h3>
+        
+        <div class="match-card">
+          <div class="pista-header"><span>SEMIFINAL PLATA 1 (5º vs 8º)</span></div>
+          <div class="match-body">
+            <div class="team"><strong>${p5.name}</strong> (5º)</div>
+            <select class="score-select" onchange="updateFinalScore('cons_sf1', 'j1', this.value)">
+              ${getScoreOptions(f.cons_sf1.j1)}
+            </select>
+            <span>vs</span>
+            <select class="score-select" onchange="updateFinalScore('cons_sf1', 'j2', this.value)">
+              ${getScoreOptions(f.cons_sf1.j2)}
+            </select>
+            <div class="team right"><strong>${p8.name}</strong> (8º)</div>
+          </div>
+        </div>
+
+        <div class="match-card">
+          <div class="pista-header"><span>SEMIFINAL PLATA 2 (6º vs 7º)</span></div>
+          <div class="match-body">
+            <div class="team"><strong>${p6.name}</strong> (6º)</div>
+            <select class="score-select" onchange="updateFinalScore('cons_sf2', 'j1', this.value)">
+              ${getScoreOptions(f.cons_sf2.j1)}
+            </select>
+            <span>vs</span>
+            <select class="score-select" onchange="updateFinalScore('cons_sf2', 'j2', this.value)">
+              ${getScoreOptions(f.cons_sf2.j2)}
+            </select>
+            <div class="team right"><strong>${p7.name}</strong> (7º)</div>
+          </div>
+        </div>
+
+        <div class="match-card" style="border-color: var(--silver);">
+          <div class="pista-header"><span style="color: #cbd5e1;">FINAL DE CONSOLACIÓN (PLATA)</span></div>
+          <div class="match-body">
+            <div class="team">${wCSF1 ? `<strong>${wCSF1.name}</strong>` : '<em>Ganador SF Plata 1</em>'}</div>
+            <select class="score-select" ${!wCSF1 || !wCSF2 ? 'disabled' : ''} onchange="updateFinalScore('cons_final', 'j1', this.value)">
+              ${getScoreOptions(f.cons_final.j1)}
+            </select>
+            <span>vs</span>
+            <select class="score-select" ${!wCSF1 || !wCSF2 ? 'disabled' : ''} onchange="updateFinalScore('cons_final', 'j2', this.value)">
+              ${getScoreOptions(f.cons_final.j2)}
+            </select>
+            <div class="team right">${wCSF2 ? `<strong>${wCSF2.name}</strong>` : '<em>Ganador SF Plata 2</em>'}</div>
+          </div>
+        </div>
+
+        ${champSilver ? `<div class="descansos" style="background: rgba(148, 163, 184, 0.2); border: 1px solid var(--silver); text-align: center; font-size: 1.05rem; color: #e2e8f0;">👏 <strong>¡CAMPEONES DE CONSOLACIÓN!</strong>: ${champSilver.name} 👏</div>` : ''}
+      </div>
+    `;
+
+    document.getElementById('finals-content').innerHTML = html;
+  }
+
+  function confirmReset() {
+    if (confirm('¿ATENCIÓN: Quieres borrar los resultados y reiniciar el torneo?')) {
+      if (confirm('¿Confirmas de verdad? Esta acción no se puede deshacer.')) {
+        localStorage.removeItem('padel_torneo_data_v3');
+        location.reload();
+      }
+    }
+  }
+
+  function loadDemoData() {
+    const demo = [];
+    for (let i = 1; i <= 8; i++) demo.push({ name: `Chico R${i}`, gender: 'H', pos: 'Reves' });
+    for (let i = 1; i <= 8; i++) demo.push({ name: `David D${i}`, gender: 'H', pos: 'Drive' });
+    for (let i = 1; i <= 8; i++) demo.push({ name: `Elena D${i}`, gender: 'M', pos: 'Drive' });
+    for (let i = 1; i <= 8; i++) demo.push({ name: `Lucia R${i}`, gender: 'M', pos: 'Reves' });
+    state.players = demo;
+    renderPlayers();
+    saveState();
+  }
+</script>
+</body>
+</html>
