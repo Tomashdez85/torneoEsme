@@ -28,8 +28,10 @@
     .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 15px; margin-bottom: 15px; }
     .btn { background: var(--accent); color: white; border: none; padding: 10px 15px; border-radius: 6px; font-size: 0.95rem; font-weight: bold; cursor: pointer; width: 100%; transition: background 0.2s; }
     .btn:hover { background: var(--accent-hover); }
-    .btn-secondary { background: #475569; margin-top: 10px; }
+    .btn-secondary { background: #475569; }
     .btn-secondary:hover { background: #334155; }
+    .btn-warning { background: #d97706; }
+    .btn-warning:hover { background: #b45309; }
     .btn-danger { background: #dc2626; margin-top: 15px; }
     .btn-danger:hover { background: #b91c1c; }
 
@@ -38,6 +40,15 @@
 
     .player-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 6px; margin-top: 10px; max-height: 220px; overflow-y: auto; }
     .player-badge { background: #334155; padding: 6px 8px; border-radius: 4px; font-size: 0.8rem; display: flex; justify-content: space-between; align-items: center; }
+
+    /* Estilos pantalla de edición de parejas */
+    .pairs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin: 15px 0; }
+    .pair-edit-card { background: #0f172a; border: 1px solid var(--border); border-radius: 8px; padding: 10px; }
+    .pair-edit-title { font-weight: bold; color: #38bdf8; margin-bottom: 6px; font-size: 0.85rem; }
+    .pair-select-row { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+    .pair-select-row:last-child { margin-bottom: 0; }
+    .pair-select-row label { font-size: 0.75rem; color: var(--text-muted); width: 45px; }
+    .pair-select-row select { flex: 1; padding: 5px; font-size: 0.85rem; background: #1e293b; }
 
     .tabs { display: flex; gap: 6px; overflow-x: auto; margin-bottom: 15px; padding-bottom: 4px; }
     .tab-btn { background: var(--card-bg); border: 1px solid var(--border); color: var(--text-muted); padding: 8px 12px; border-radius: 6px; cursor: pointer; white-space: nowrap; font-size: 0.85rem; }
@@ -77,11 +88,11 @@
 <div class="container">
   <h1>🎾 Torneo Pádel Mixto Express</h1>
 
-  <!-- SECCIÓN 1: REGISTRO (Se bloquea tras iniciar) -->
+  <!-- PANTALLA 1: REGISTRO DE JUGADORES -->
   <div id="setup-section" class="card">
     <h2>1. Registro de Jugadores (<span id="player-count">0</span>/32)</h2>
     <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px; text-align: center;">
-      16 chicos y 16 chicas. Usa la posición <strong>Polivalente</strong> como comodín para equilibrar lados.
+      16 chicos y 16 chicas. Usa <strong>Polivalente 🔄</strong> si pueden jugar en ambos lados.
     </p>
 
     <div class="grid-form">
@@ -101,12 +112,32 @@
     <div class="player-list" id="players-container"></div>
 
     <div style="margin-top: 15px; display: flex; gap: 8px;">
-      <button class="btn" onclick="generateTournament()">🔒 Iniciar Torneo y Fijar Cuadro</button>
+      <button class="btn" onclick="startPairReview()">🎲 Sortear Parejas</button>
       <button class="btn btn-secondary" style="width: auto;" onclick="loadDemoData()">Demo (32)</button>
     </div>
   </div>
 
-  <!-- SECCIÓN 2: TORNEO BLOQUEADO Y EN CURSO -->
+  <!-- PANTALLA 2: REVISIÓN Y EDICIÓN PREVIA DE PAREJAS -->
+  <div id="review-section" class="card hidden">
+    <h2>👥 Revisión de Parejas Formadas</h2>
+    <p style="font-size: 0.85rem; color: var(--text-muted); text-align: center; margin-bottom: 10px;">
+      Revisa las parejas asignadas. Puedes cambiar cualquier jugador desde los desplegables antes de confirmar.
+    </p>
+
+    <div id="pairs-review-container" class="pairs-grid"></div>
+
+    <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 15px;">
+      <button class="btn" style="font-size: 1.05rem; padding: 12px;" onclick="confirmPairsAndGenerateTournament()">
+        🔒 Confirmar Parejas y Generar Cuadro
+      </button>
+      <div style="display: flex; gap: 8px;">
+        <button class="btn btn-warning" onclick="reShufflePairs()">🔄 Re-sortear Aleatoriamente</button>
+        <button class="btn btn-secondary" onclick="backToSetup()">⬅️ Volver al Registro</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANTALLA 3: TORNEO EN CURSO Y CUADRO FINAL -->
   <div id="tournament-section" class="hidden">
     <div class="tabs" id="tabs-container"></div>
 
@@ -136,7 +167,7 @@
       </table>
     </div>
 
-    <!-- Vista de Fase Final (Oro y Consolación) -->
+    <!-- Vista de Fases Finales -->
     <div id="finals-view" class="card hidden">
       <h2>🏆 Fases Finales</h2>
       <div id="finals-content"></div>
@@ -158,10 +189,11 @@
   ];
 
   let state = {
+    screen: 'setup', // 'setup', 'review', 'tournament'
     locked: false,
     players: [],
     pairs: [],
-    scores: {}, // "r-p" -> { j1: "", j2: "" }
+    scores: {},
     finalScores: {
       sf1: { j1: '', j2: '' },
       sf2: { j1: '', j2: '' },
@@ -175,11 +207,14 @@
   };
 
   window.onload = () => {
-    const saved = localStorage.getItem('padel_torneo_data_v4');
+    const saved = localStorage.getItem('padel_torneo_data_v5');
     if (saved) {
       state = JSON.parse(saved);
       if (state.locked && state.pairs.length === 16) {
         showTournament();
+        return;
+      } else if (state.screen === 'review' && state.pairs.length === 16) {
+        showReviewScreen();
         return;
       }
     }
@@ -187,7 +222,7 @@
   };
 
   function saveState() {
-    localStorage.setItem('padel_torneo_data_v4', JSON.stringify(state));
+    localStorage.setItem('padel_torneo_data_v5', JSON.stringify(state));
   }
 
   function addPlayer() {
@@ -224,19 +259,17 @@
     document.getElementById('player-count').innerText = state.players.length;
   }
 
-  function generateTournament() {
-    if (state.players.length !== 32) {
-      return alert('Se necesitan exactamente 32 jugadores.');
-    }
+  function shuffle(arr) { return arr.sort(() => Math.random() - 0.5); }
 
+  function buildPairsAlgorithm() {
     const chicos = state.players.filter(p => p.gender === 'H');
     const chicas = state.players.filter(p => p.gender === 'M');
 
     if (chicos.length !== 16 || chicas.length !== 16) {
-      return alert(`Deben ser 16 chicos y 16 chicas (hay ${chicos.length} chicos y ${chicas.length} chicas).`);
+      alert(`Deben ser 16 chicos y 16 chicas (hay ${chicos.length} chicos y ${chicas.length} chicas).`);
+      return false;
     }
 
-    // Listas por categoría
     let chicosReves = shuffle(chicos.filter(p => p.pos === 'Reves'));
     let chicosDrive = shuffle(chicos.filter(p => p.pos === 'Drive'));
     let chicosPoli  = shuffle(chicos.filter(p => p.pos === 'Polivalente'));
@@ -245,11 +278,9 @@
     let chicasDrive = shuffle(chicas.filter(p => p.pos === 'Drive'));
     let chicasPoli  = shuffle(chicas.filter(p => p.pos === 'Polivalente'));
 
-    // ASIGNACIÓN INTELIGENTE DE COMODINES (Polivalentes)
-    // 1. Asignar chicas polivalentes según la demanda de chicos fijos
+    // Balanceo con polivalentes
     while (chicasPoli.length > 0) {
       const p = chicasPoli.pop();
-      // Si hay más chicos de revés que chicas de drive, la polivalente va a Drive
       if ((chicosReves.length - chicasDrive.length) > (chicosDrive.length - chicasReves.length)) {
         chicasDrive.push(p);
       } else {
@@ -257,10 +288,8 @@
       }
     }
 
-    // 2. Asignar chicos polivalentes para compensar las posiciones finales de las chicas
     while (chicosPoli.length > 0) {
       const p = chicosPoli.pop();
-      // Si faltan chicos de revés para las chicas de drive
       if ((chicasDrive.length - chicosReves.length) > (chicasReves.length - chicosDrive.length)) {
         chicosReves.push(p);
       } else {
@@ -268,25 +297,115 @@
       }
     }
 
-    // 3. Ajuste forzado de seguridad (por si no hubiese suficientes polivalentes y los fijos estuvieran descompensados)
     while (chicosReves.length > chicasDrive.length && chicosReves.length > 0) chicosDrive.push(chicosReves.pop());
     while (chicosDrive.length > chicasReves.length && chicosDrive.length > 0) chicosReves.push(chicosDrive.pop());
     while (chicasDrive.length > chicosReves.length && chicasDrive.length > 0) chicasReves.push(chicasDrive.pop());
-    while (chicasReves.length > chicosDrive.length && chicasReves.length > 0) chicasDrive.push(chicasReves.pop());
+    while (chicasReves.length > chicosDrive.length && chicasReves.length > 0) chicosDrive.push(chicasReves.pop());
 
     const pairs = [];
-    // Parejas Chico Revés + Chica Drive
     const t1 = Math.min(chicosReves.length, chicasDrive.length);
-    for (let i = 0; i < t1; i++) {
-      pairs.push({ id: pairs.length + 1, p1: chicosReves[i], p2: chicasDrive[i] });
-    }
-    // Parejas Chico Drive + Chica Revés
+    for (let i = 0; i < t1; i++) pairs.push({ id: pairs.length + 1, p1: chicosReves[i], p2: chicasDrive[i] });
     const t2 = Math.min(chicosDrive.length, chicasReves.length);
-    for (let i = 0; i < t2; i++) {
-      pairs.push({ id: pairs.length + 1, p1: chicosDrive[i], p2: chicasReves[i] });
-    }
+    for (let i = 0; i < t2; i++) pairs.push({ id: pairs.length + 1, p1: chicosDrive[i], p2: chicasReves[i] });
 
     state.pairs = pairs;
+    return true;
+  }
+
+  function startPairReview() {
+    if (state.players.length !== 32) return alert('Se necesitan exactamente 32 jugadores inscritos.');
+    if (!buildPairsAlgorithm()) return;
+
+    state.screen = 'review';
+    saveState();
+    showReviewScreen();
+  }
+
+  function reShufflePairs() {
+    buildPairsAlgorithm();
+    saveState();
+    renderReviewPairs();
+  }
+
+  function backToSetup() {
+    state.screen = 'setup';
+    document.getElementById('review-section').classList.add('hidden');
+    document.getElementById('setup-section').classList.remove('hidden');
+    saveState();
+  }
+
+  function showReviewScreen() {
+    document.getElementById('setup-section').classList.add('hidden');
+    document.getElementById('tournament-section').classList.add('hidden');
+    document.getElementById('review-section').classList.remove('hidden');
+    renderReviewPairs();
+  }
+
+  function renderReviewPairs() {
+    const container = document.getElementById('pairs-review-container');
+    container.innerHTML = '';
+
+    const chicos = state.players.filter(p => p.gender === 'H');
+    const chicas = state.players.filter(p => p.gender === 'M');
+
+    state.pairs.forEach((pair, pairIdx) => {
+      const card = document.createElement('div');
+      card.className = 'pair-edit-card';
+
+      let optionsChicos = chicos.map(c => `
+        <option value="${c.name}" ${c.name === pair.p1.name ? 'selected' : ''}>
+          ${c.name} (${c.pos})
+        </option>
+      `).join('');
+
+      let optionsChicas = chicas.map(c => `
+        <option value="${c.name}" ${c.name === pair.p2.name ? 'selected' : ''}>
+          ${c.name} (${c.pos})
+        </option>
+      `).join('');
+
+      card.innerHTML = `
+        <div class="pair-edit-title">Pareja ${pair.id}</div>
+        <div class="pair-select-row">
+          <label>Chico:</label>
+          <select onchange="swapPlayer(${pairIdx}, 'H', this.value)">${optionsChicos}</select>
+        </div>
+        <div class="pair-select-row">
+          <label>Chica:</label>
+          <select onchange="swapPlayer(${pairIdx}, 'M', this.value)">${optionsChicas}</select>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  function swapPlayer(pairIdx, gender, newPlayerName) {
+    const newPlayer = state.players.find(p => p.name === newPlayerName && p.gender === gender);
+    if (!newPlayer) return;
+
+    // Localizar dónde estaba este jugador para hacer el intercambio
+    const oldPairIdx = state.pairs.findIndex((p, idx) => idx !== pairIdx && ((gender === 'H' && p.p1.name === newPlayerName) || (gender === 'M' && p.p2.name === newPlayerName)));
+
+    if (oldPairIdx !== -1) {
+      if (gender === 'H') {
+        const currentP1 = state.pairs[pairIdx].p1;
+        state.pairs[pairIdx].p1 = newPlayer;
+        state.pairs[oldPairIdx].p1 = currentP1;
+      } else {
+        const currentP2 = state.pairs[pairIdx].p2;
+        state.pairs[pairIdx].p2 = newPlayer;
+        state.pairs[oldPairIdx].p2 = currentP2;
+      }
+    } else {
+      if (gender === 'H') state.pairs[pairIdx].p1 = newPlayer;
+      else state.pairs[pairIdx].p2 = newPlayer;
+    }
+
+    saveState();
+    renderReviewPairs();
+  }
+
+  function confirmPairsAndGenerateTournament() {
     state.scores = {};
     state.finalScores = {
       sf1: { j1: '', j2: '' },
@@ -298,15 +417,15 @@
       cons_final: { j1: '', j2: '' }
     };
     state.locked = true;
+    state.screen = 'tournament';
     state.activeTab = 'r1';
     saveState();
     showTournament();
   }
 
-  function shuffle(arr) { return arr.sort(() => Math.random() - 0.5); }
-
   function showTournament() {
     document.getElementById('setup-section').classList.add('hidden');
+    document.getElementById('review-section').classList.add('hidden');
     document.getElementById('tournament-section').classList.remove('hidden');
     renderTabs();
     renderContent();
@@ -478,7 +597,6 @@
   function renderFinals() {
     const standings = calculateStandings();
     const [p1, p2, p3, p4, p5, p6, p7, p8] = standings;
-
     const f = state.finalScores;
 
     // Cuadro de Oro
@@ -496,7 +614,7 @@
       else if (parseInt(f.final.j2) > parseInt(f.final.j1)) champGold = wSF2;
     }
 
-    // Cuadro de Plata / Consolación
+    // Cuadro de Plata
     let wCSF1 = null, wCSF2 = null, champSilver = null;
     if (f.cons_sf1.j1 !== '' && f.cons_sf1.j2 !== '') {
       if (parseInt(f.cons_sf1.j1) > parseInt(f.cons_sf1.j2)) wCSF1 = p5;
@@ -638,7 +756,7 @@
   function confirmReset() {
     if (confirm('¿ATENCIÓN: Quieres borrar los resultados y reiniciar el torneo?')) {
       if (confirm('¿Confirmas de verdad? Esta acción no se puede deshacer.')) {
-        localStorage.removeItem('padel_torneo_data_v4');
+        localStorage.removeItem('padel_torneo_data_v5');
         location.reload();
       }
     }
