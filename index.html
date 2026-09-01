@@ -37,7 +37,7 @@
     input, select { background: #0f172a; border: 1px solid var(--border); color: white; padding: 8px; border-radius: 6px; font-size: 0.9rem; }
 
     .player-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 6px; margin-top: 10px; max-height: 220px; overflow-y: auto; }
-    .player-badge { background: #334155; padding: 6px 8px; border-radius: 4px; font-size: 0.8rem; display: flex; justify-content: space-between; }
+    .player-badge { background: #334155; padding: 6px 8px; border-radius: 4px; font-size: 0.8rem; display: flex; justify-content: space-between; align-items: center; }
 
     .tabs { display: flex; gap: 6px; overflow-x: auto; margin-bottom: 15px; padding-bottom: 4px; }
     .tab-btn { background: var(--card-bg); border: 1px solid var(--border); color: var(--text-muted); padding: 8px 12px; border-radius: 6px; cursor: pointer; white-space: nowrap; font-size: 0.85rem; }
@@ -81,7 +81,7 @@
   <div id="setup-section" class="card">
     <h2>1. Registro de Jugadores (<span id="player-count">0</span>/32)</h2>
     <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px; text-align: center;">
-      Se requieren 16 chicos (Drive/Revés) y 16 chicas (Drive/Revés).
+      16 chicos y 16 chicas. Usa la posición <strong>Polivalente</strong> como comodín para equilibrar lados.
     </p>
 
     <div class="grid-form">
@@ -93,6 +93,7 @@
       <select id="p-pos">
         <option value="Reves">Revés</option>
         <option value="Drive">Drive</option>
+        <option value="Polivalente">Polivalente 🔄</option>
       </select>
       <button class="btn" style="width: auto;" onclick="addPlayer()">Añadir</button>
     </div>
@@ -174,7 +175,7 @@
   };
 
   window.onload = () => {
-    const saved = localStorage.getItem('padel_torneo_data_v3');
+    const saved = localStorage.getItem('padel_torneo_data_v4');
     if (saved) {
       state = JSON.parse(saved);
       if (state.locked && state.pairs.length === 16) {
@@ -186,7 +187,7 @@
   };
 
   function saveState() {
-    localStorage.setItem('padel_torneo_data_v3', JSON.stringify(state));
+    localStorage.setItem('padel_torneo_data_v4', JSON.stringify(state));
   }
 
   function addPlayer() {
@@ -235,22 +236,55 @@
       return alert(`Deben ser 16 chicos y 16 chicas (hay ${chicos.length} chicos y ${chicas.length} chicas).`);
     }
 
+    // Listas por categoría
     let chicosReves = shuffle(chicos.filter(p => p.pos === 'Reves'));
     let chicosDrive = shuffle(chicos.filter(p => p.pos === 'Drive'));
+    let chicosPoli  = shuffle(chicos.filter(p => p.pos === 'Polivalente'));
+
     let chicasReves = shuffle(chicas.filter(p => p.pos === 'Reves'));
     let chicasDrive = shuffle(chicas.filter(p => p.pos === 'Drive'));
+    let chicasPoli  = shuffle(chicas.filter(p => p.pos === 'Polivalente'));
 
-    // Ajuste equilibrado de lados
+    // ASIGNACIÓN INTELIGENTE DE COMODINES (Polivalentes)
+    // 1. Asignar chicas polivalentes según la demanda de chicos fijos
+    while (chicasPoli.length > 0) {
+      const p = chicasPoli.pop();
+      // Si hay más chicos de revés que chicas de drive, la polivalente va a Drive
+      if ((chicosReves.length - chicasDrive.length) > (chicosDrive.length - chicasReves.length)) {
+        chicasDrive.push(p);
+      } else {
+        chicasReves.push(p);
+      }
+    }
+
+    // 2. Asignar chicos polivalentes para compensar las posiciones finales de las chicas
+    while (chicosPoli.length > 0) {
+      const p = chicosPoli.pop();
+      // Si faltan chicos de revés para las chicas de drive
+      if ((chicasDrive.length - chicosReves.length) > (chicasReves.length - chicosDrive.length)) {
+        chicosReves.push(p);
+      } else {
+        chicosDrive.push(p);
+      }
+    }
+
+    // 3. Ajuste forzado de seguridad (por si no hubiese suficientes polivalentes y los fijos estuvieran descompensados)
     while (chicosReves.length > chicasDrive.length && chicosReves.length > 0) chicosDrive.push(chicosReves.pop());
     while (chicosDrive.length > chicasReves.length && chicosDrive.length > 0) chicosReves.push(chicosDrive.pop());
     while (chicasDrive.length > chicosReves.length && chicasDrive.length > 0) chicasReves.push(chicasDrive.pop());
     while (chicasReves.length > chicosDrive.length && chicasReves.length > 0) chicasDrive.push(chicasReves.pop());
 
     const pairs = [];
+    // Parejas Chico Revés + Chica Drive
     const t1 = Math.min(chicosReves.length, chicasDrive.length);
-    for (let i = 0; i < t1; i++) pairs.push({ id: pairs.length + 1, p1: chicosReves[i], p2: chicasDrive[i] });
+    for (let i = 0; i < t1; i++) {
+      pairs.push({ id: pairs.length + 1, p1: chicosReves[i], p2: chicasDrive[i] });
+    }
+    // Parejas Chico Drive + Chica Revés
     const t2 = Math.min(chicosDrive.length, chicasReves.length);
-    for (let i = 0; i < t2; i++) pairs.push({ id: pairs.length + 1, p1: chicosDrive[i], p2: chicasReves[i] });
+    for (let i = 0; i < t2; i++) {
+      pairs.push({ id: pairs.length + 1, p1: chicosDrive[i], p2: chicasReves[i] });
+    }
 
     state.pairs = pairs;
     state.scores = {};
@@ -447,7 +481,7 @@
 
     const f = state.finalScores;
 
-    // LÓGICA CUADRO DE ORO (1º al 4º)
+    // Cuadro de Oro
     let wSF1 = null, lSF1 = null, wSF2 = null, lSF2 = null, champGold = null;
     if (f.sf1.j1 !== '' && f.sf1.j2 !== '') {
       if (parseInt(f.sf1.j1) > parseInt(f.sf1.j2)) { wSF1 = p1; lSF1 = p4; }
@@ -462,7 +496,7 @@
       else if (parseInt(f.final.j2) > parseInt(f.final.j1)) champGold = wSF2;
     }
 
-    // LÓGICA CUADRO DE PLATA / CONSOLACIÓN (5º al 8º)
+    // Cuadro de Plata / Consolación
     let wCSF1 = null, wCSF2 = null, champSilver = null;
     if (f.cons_sf1.j1 !== '' && f.cons_sf1.j2 !== '') {
       if (parseInt(f.cons_sf1.j1) > parseInt(f.cons_sf1.j2)) wCSF1 = p5;
@@ -604,18 +638,48 @@
   function confirmReset() {
     if (confirm('¿ATENCIÓN: Quieres borrar los resultados y reiniciar el torneo?')) {
       if (confirm('¿Confirmas de verdad? Esta acción no se puede deshacer.')) {
-        localStorage.removeItem('padel_torneo_data_v3');
+        localStorage.removeItem('padel_torneo_data_v4');
         location.reload();
       }
     }
   }
 
   function loadDemoData() {
-    const demo = [];
-    for (let i = 1; i <= 8; i++) demo.push({ name: `Chico R${i}`, gender: 'H', pos: 'Reves' });
-    for (let i = 1; i <= 8; i++) demo.push({ name: `David D${i}`, gender: 'H', pos: 'Drive' });
-    for (let i = 1; i <= 8; i++) demo.push({ name: `Elena D${i}`, gender: 'M', pos: 'Drive' });
-    for (let i = 1; i <= 8; i++) demo.push({ name: `Lucia R${i}`, gender: 'M', pos: 'Reves' });
+    const demo = [
+      { name: 'Carlos', gender: 'H', pos: 'Reves' },
+      { name: 'Mario', gender: 'H', pos: 'Reves' },
+      { name: 'Javier', gender: 'H', pos: 'Reves' },
+      { name: 'Pablo', gender: 'H', pos: 'Reves' },
+      { name: 'David', gender: 'H', pos: 'Drive' },
+      { name: 'Sergio', gender: 'H', pos: 'Drive' },
+      { name: 'Lucas', gender: 'H', pos: 'Drive' },
+      { name: 'Jorge', gender: 'H', pos: 'Drive' },
+      { name: 'Raúl', gender: 'H', pos: 'Polivalente' },
+      { name: 'Víctor', gender: 'H', pos: 'Polivalente' },
+      { name: 'Álvaro', gender: 'H', pos: 'Polivalente' },
+      { name: 'Manuel', gender: 'H', pos: 'Polivalente' },
+      { name: 'Hugo', gender: 'H', pos: 'Polivalente' },
+      { name: 'Marcos', gender: 'H', pos: 'Polivalente' },
+      { name: 'Iván', gender: 'H', pos: 'Polivalente' },
+      { name: 'Rubén', gender: 'H', pos: 'Polivalente' },
+
+      { name: 'Elena', gender: 'M', pos: 'Drive' },
+      { name: 'Lucía', gender: 'M', pos: 'Drive' },
+      { name: 'Marta', gender: 'M', pos: 'Drive' },
+      { name: 'Paula', gender: 'M', pos: 'Drive' },
+      { name: 'Ana', gender: 'M', pos: 'Reves' },
+      { name: 'Sara', gender: 'M', pos: 'Reves' },
+      { name: 'Laura', gender: 'M', pos: 'Reves' },
+      { name: 'Carmen', gender: 'M', pos: 'Reves' },
+      { name: 'Clara', gender: 'M', pos: 'Polivalente' },
+      { name: 'Sofía', gender: 'M', pos: 'Polivalente' },
+      { name: 'Irene', gender: 'M', pos: 'Polivalente' },
+      { name: 'Patricia', gender: 'M', pos: 'Polivalente' },
+      { name: 'María', gender: 'M', pos: 'Polivalente' },
+      { name: 'Bea', gender: 'M', pos: 'Polivalente' },
+      { name: 'Alba', gender: 'M', pos: 'Polivalente' },
+      { name: 'Nuria', gender: 'M', pos: 'Polivalente' }
+    ];
     state.players = demo;
     renderPlayers();
     saveState();
