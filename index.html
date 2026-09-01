@@ -20,13 +20,13 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background-color: var(--bg); color: var(--text); padding: 12px; }
-    .container { max-width: 900px; margin: 0 auto; }
+    .container { max-width: 1200px; margin: 0 auto; }
 
     h1, h2, h3 { text-align: center; margin-bottom: 12px; }
     h1 { color: var(--accent); font-size: 1.6rem; }
     
     .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 15px; margin-bottom: 15px; }
-    .btn { background: var(--accent); color: white; border: none; padding: 10px 15px; border-radius: 6px; font-size: 0.95rem; font-weight: bold; cursor: pointer; width: 100%; transition: background 0.2s; }
+    .btn { background: var(--accent); color: white; border: none; padding: 10px 15px; border-radius: 6px; font-size: 0.95rem; font-weight: bold; cursor: pointer; width: 100%; transition: background 0.2s; text-align: center; }
     .btn:hover { background: var(--accent-hover); }
     .btn-secondary { background: #475569; }
     .btn-secondary:hover { background: #334155; }
@@ -34,6 +34,8 @@
     .btn-warning:hover { background: #b45309; }
     .btn-danger { background: #dc2626; margin-top: 15px; }
     .btn-danger:hover { background: #b91c1c; }
+    .btn-next { background: #2563eb; font-size: 1.05rem; padding: 12px; margin-top: 15px; }
+    .btn-next:hover { background: #1d4ed8; }
 
     .grid-form { display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 6px; margin-bottom: 10px; }
     input, select { background: #0f172a; border: 1px solid var(--border); color: white; padding: 8px; border-radius: 6px; font-size: 0.9rem; }
@@ -41,7 +43,7 @@
     .player-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 6px; margin-top: 10px; max-height: 220px; overflow-y: auto; }
     .player-badge { background: #334155; padding: 6px 8px; border-radius: 4px; font-size: 0.8rem; display: flex; justify-content: space-between; align-items: center; }
 
-    /* Estilos pantalla de edición de parejas */
+    /* Pantalla de edición de parejas */
     .pairs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin: 15px 0; }
     .pair-edit-card { background: #0f172a; border: 1px solid var(--border); border-radius: 8px; padding: 10px; }
     .pair-edit-title { font-weight: bold; color: #38bdf8; margin-bottom: 6px; font-size: 0.85rem; }
@@ -50,29 +52,38 @@
     .pair-select-row label { font-size: 0.75rem; color: var(--text-muted); width: 45px; }
     .pair-select-row select { flex: 1; padding: 5px; font-size: 0.85rem; background: #1e293b; }
 
+    /* Pestañas */
     .tabs { display: flex; gap: 6px; overflow-x: auto; margin-bottom: 15px; padding-bottom: 4px; }
     .tab-btn { background: var(--card-bg); border: 1px solid var(--border); color: var(--text-muted); padding: 8px 12px; border-radius: 6px; cursor: pointer; white-space: nowrap; font-size: 0.85rem; }
     .tab-btn.active { background: var(--accent); color: white; font-weight: bold; border-color: var(--accent); }
     .tab-btn.gold { border-color: var(--gold); color: #fde68a; }
     .tab-btn.gold.active { background: var(--gold); color: #000; }
 
+    /* Layout con clasificación lateral */
+    .tournament-layout { display: grid; grid-template-columns: 1fr; gap: 15px; }
+    @media (min-width: 850px) {
+      .tournament-layout { grid-template-columns: 1.6fr 1.1fr; align-items: start; }
+      .sidebar-sticky { position: sticky; top: 10px; }
+    }
+
     .match-card { background: #0f172a; border: 1px solid var(--border); border-radius: 8px; padding: 10px; margin-bottom: 10px; }
     .pista-header { display: flex; justify-content: space-between; font-weight: bold; color: #38bdf8; margin-bottom: 6px; font-size: 0.85rem; }
     .match-body { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-    .team { flex: 1; font-size: 0.9rem; }
+    .team { flex: 1; font-size: 0.88rem; }
     .team.right { text-align: right; }
     .score-select { width: 62px; text-align: center; font-size: 1rem; font-weight: bold; padding: 4px; background: #1e293b; color: #38bdf8; border: 1px solid var(--border); border-radius: 4px; }
 
     .descansos { background: var(--descanso-bg); color: #cbd5e1; padding: 8px 12px; border-radius: 6px; font-size: 0.85rem; margin-top: 10px; }
 
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; text-align: left; }
-    th, td { padding: 8px; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+    /* Tablas de clasificación */
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th, td { padding: 6px 8px; border-bottom: 1px solid var(--border); font-size: 0.8rem; }
     th { background: #0f172a; color: var(--text-muted); }
     
     .top4-row { background: rgba(245, 158, 11, 0.12); }
     .consolation-row { background: rgba(148, 163, 184, 0.1); }
     
-    .tag-badge { font-size: 0.7rem; padding: 2px 5px; border-radius: 3px; margin-left: 4px; font-weight: bold; }
+    .tag-badge { font-size: 0.65rem; padding: 1px 4px; border-radius: 3px; margin-left: 3px; font-weight: bold; }
     .tag-gold { background: var(--gold); color: #000; }
     .tag-silver { background: #64748b; color: #fff; }
 
@@ -92,7 +103,7 @@
   <div id="setup-section" class="card">
     <h2>1. Registro de Jugadores (<span id="player-count">0</span>/32)</h2>
     <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px; text-align: center;">
-      16 chicos y 16 chicas. Usa <strong>Polivalente 🔄</strong> si pueden jugar en ambos lados.
+      16 chicos y 16 chicas. Usa <strong>Polivalente 🔄</strong> si juegan en ambos lados.
     </p>
 
     <div class="grid-form">
@@ -121,7 +132,7 @@
   <div id="review-section" class="card hidden">
     <h2>👥 Revisión de Parejas Formadas</h2>
     <p style="font-size: 0.85rem; color: var(--text-muted); text-align: center; margin-bottom: 10px;">
-      Revisa las parejas asignadas. Puedes cambiar cualquier jugador desde los desplegables antes de confirmar.
+      Revisa las parejas asignadas. Puedes cambiar jugadores con los desplegables antes de confirmar.
     </p>
 
     <div id="pairs-review-container" class="pairs-grid"></div>
@@ -137,43 +148,48 @@
     </div>
   </div>
 
-  <!-- PANTALLA 3: TORNEO EN CURSO Y CUADRO FINAL -->
+  <!-- PANTALLA 3: TORNEO EN CURSO (CON CLASIFICACIÓN LATERAL) -->
   <div id="tournament-section" class="hidden">
     <div class="tabs" id="tabs-container"></div>
 
-    <!-- Vista de Rondas Clasificatorias -->
-    <div id="round-view" class="card"></div>
+    <div class="tournament-layout">
+      
+      <!-- COLUMNA PRINCIPAL (RONDAS / FASES FINALES) -->
+      <div class="main-column">
+        <!-- Vista de Rondas Clasificatorias -->
+        <div id="round-view" class="card"></div>
 
-    <!-- Vista de Clasificación -->
-    <div id="standings-view" class="card hidden">
-      <h2>📊 Clasificación General</h2>
-      <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px; text-align: center;">
-        1º al 4º pasan a <strong>Fase Final (Oro)</strong> | 5º al 8º pasan a <strong>Consolación (Plata)</strong>
-      </p>
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Pareja</th>
-            <th>PJ</th>
-            <th>PG</th>
-            <th>PE</th>
-            <th>PP</th>
-            <th>Pts</th>
-            <th>Dif (JF-JC)</th>
-          </tr>
-        </thead>
-        <tbody id="standings-body"></tbody>
-      </table>
+        <!-- Vista de Fases Finales -->
+        <div id="finals-view" class="card hidden">
+          <h2>🏆 Fases Finales</h2>
+          <div id="finals-content"></div>
+        </div>
+
+        <button class="btn btn-danger" onclick="confirmReset()">⚠️ Reiniciar Todo el Torneo</button>
+      </div>
+
+      <!-- COLUMNA LATERAL (CLASIFICACIÓN EN VIVO) -->
+      <div class="sidebar-column">
+        <div class="card sidebar-sticky">
+          <h3 style="color: #38bdf8; font-size: 1.1rem; margin-bottom: 8px;">📊 Clasificación en Directo</h3>
+          <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px; text-align: center;">
+            <span class="tag-badge tag-gold">1º-4º Oro</span> | <span class="tag-badge tag-silver">5º-8º Plata</span>
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Pareja</th>
+                <th>Pts</th>
+                <th>Dif (JF-JC)</th>
+              </tr>
+            </thead>
+            <tbody id="sidebar-standings-body"></tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
-
-    <!-- Vista de Fases Finales -->
-    <div id="finals-view" class="card hidden">
-      <h2>🏆 Fases Finales</h2>
-      <div id="finals-content"></div>
-    </div>
-
-    <button class="btn btn-danger" onclick="confirmReset()">⚠️ Reiniciar Todo el Torneo</button>
   </div>
 </div>
 
@@ -189,7 +205,7 @@
   ];
 
   let state = {
-    screen: 'setup', // 'setup', 'review', 'tournament'
+    screen: 'setup',
     locked: false,
     players: [],
     pairs: [],
@@ -207,7 +223,7 @@
   };
 
   window.onload = () => {
-    const saved = localStorage.getItem('padel_torneo_data_v5');
+    const saved = localStorage.getItem('padel_torneo_data_v6');
     if (saved) {
       state = JSON.parse(saved);
       if (state.locked && state.pairs.length === 16) {
@@ -222,7 +238,7 @@
   };
 
   function saveState() {
-    localStorage.setItem('padel_torneo_data_v5', JSON.stringify(state));
+    localStorage.setItem('padel_torneo_data_v6', JSON.stringify(state));
   }
 
   function addPlayer() {
@@ -278,7 +294,7 @@
     let chicasDrive = shuffle(chicas.filter(p => p.pos === 'Drive'));
     let chicasPoli  = shuffle(chicas.filter(p => p.pos === 'Polivalente'));
 
-    // Balanceo con polivalentes
+    // Balanceo con comodines polivalentes
     while (chicasPoli.length > 0) {
       const p = chicasPoli.pop();
       if ((chicosReves.length - chicasDrive.length) > (chicosDrive.length - chicasReves.length)) {
@@ -313,7 +329,7 @@
   }
 
   function startPairReview() {
-    if (state.players.length !== 32) return alert('Se necesitan exactamente 32 jugadores inscritos.');
+    if (state.players.length !== 32) return alert('Se necesitan exactamente 32 jugadores.');
     if (!buildPairsAlgorithm()) return;
 
     state.screen = 'review';
@@ -383,7 +399,6 @@
     const newPlayer = state.players.find(p => p.name === newPlayerName && p.gender === gender);
     if (!newPlayer) return;
 
-    // Localizar dónde estaba este jugador para hacer el intercambio
     const oldPairIdx = state.pairs.findIndex((p, idx) => idx !== pairIdx && ((gender === 'H' && p.p1.name === newPlayerName) || (gender === 'M' && p.p2.name === newPlayerName)));
 
     if (oldPairIdx !== -1) {
@@ -429,6 +444,7 @@
     document.getElementById('tournament-section').classList.remove('hidden');
     renderTabs();
     renderContent();
+    renderSidebarStandings();
   }
 
   function renderTabs() {
@@ -442,12 +458,6 @@
       btn.onclick = () => { state.activeTab = 'r' + r; renderTabs(); renderContent(); };
       container.appendChild(btn);
     }
-
-    const stBtn = document.createElement('button');
-    stBtn.className = `tab-btn ${state.activeTab === 'standings' ? 'active' : ''}`;
-    stBtn.innerText = `📊 Clasificación`;
-    stBtn.onclick = () => { state.activeTab = 'standings'; renderTabs(); renderContent(); };
-    container.appendChild(stBtn);
 
     const fnBtn = document.createElement('button');
     fnBtn.className = `tab-btn gold ${state.activeTab === 'finals' ? 'active' : ''}`;
@@ -466,13 +476,9 @@
 
   function renderContent() {
     document.getElementById('round-view').classList.add('hidden');
-    document.getElementById('standings-view').classList.add('hidden');
     document.getElementById('finals-view').classList.add('hidden');
 
-    if (state.activeTab === 'standings') {
-      document.getElementById('standings-view').classList.remove('hidden');
-      renderStandingsTable();
-    } else if (state.activeTab === 'finals') {
+    if (state.activeTab === 'finals') {
       document.getElementById('finals-view').classList.remove('hidden');
       renderFinals();
     } else {
@@ -512,15 +518,38 @@
         return `<strong>P${t.id}</strong> (${t.p1.name}/${t.p2.name})`;
       }).join(', ');
 
-      html += `<div class="descansos">☕ <strong>Descansan:</strong> ${desc}</div>`;
+      html += `<div class="descansos">☕ <strong>Descansan en Ronda ${roundNum}:</strong> ${desc}</div>`;
+
+      // BOTÓN SIGUIENTE RONDA
+      if (roundNum < 6) {
+        html += `<button class="btn btn-next" onclick="goToNextRound(${roundNum + 1})">➡️ Guardar y Pasar a Ronda ${roundNum + 1}</button>`;
+      } else {
+        html += `<button class="btn btn-next" style="background: var(--gold); color: black;" onclick="goToFinalsTab()">🏆 Ir a Fases Finales (Playoffs)</button>`;
+      }
+
       roundView.innerHTML = html;
     }
+  }
+
+  function goToNextRound(nextRoundNum) {
+    state.activeTab = 'r' + nextRoundNum;
+    renderTabs();
+    renderContent();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function goToFinalsTab() {
+    state.activeTab = 'finals';
+    renderTabs();
+    renderContent();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function updateScore(key, side, val) {
     if (!state.scores[key]) state.scores[key] = { j1: '', j2: '' };
     state.scores[key][side] = val;
     saveState();
+    renderSidebarStandings();
   }
 
   function calculateStandings() {
@@ -528,6 +557,7 @@
       id: p.id,
       pairObj: p,
       name: `P${p.id}: ${p.p1.name} & ${p.p2.name}`,
+      shortName: `P${p.id} (${p.p1.name.substring(0,4)}/${p.p2.name.substring(0,4)})`,
       pj: 0, pg: 0, pe: 0, pp: 0, jf: 0, jc: 0, pts: 0, dif: 0
     }));
 
@@ -556,9 +586,10 @@
     return stats;
   }
 
-  function renderStandingsTable() {
+  function renderSidebarStandings() {
     const standings = calculateStandings();
-    const tbody = document.getElementById('standings-body');
+    const tbody = document.getElementById('sidebar-standings-body');
+    if (!tbody) return;
     tbody.innerHTML = '';
 
     standings.forEach((t, i) => {
@@ -576,10 +607,6 @@
         <tr class="${rowClass}">
           <td><strong>${i + 1}º</strong></td>
           <td>${t.name} ${tagHtml}</td>
-          <td>${t.pj}</td>
-          <td>${t.pg}</td>
-          <td>${t.pe}</td>
-          <td>${t.pp}</td>
           <td><strong>${t.pts}</strong></td>
           <td>${t.dif > 0 ? '+' : ''}${t.dif} (${t.jf}-${t.jc})</td>
         </tr>
@@ -756,7 +783,7 @@
   function confirmReset() {
     if (confirm('¿ATENCIÓN: Quieres borrar los resultados y reiniciar el torneo?')) {
       if (confirm('¿Confirmas de verdad? Esta acción no se puede deshacer.')) {
-        localStorage.removeItem('padel_torneo_data_v5');
+        localStorage.removeItem('padel_torneo_data_v6');
         location.reload();
       }
     }
