@@ -3,7 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Torneo Pádel Mixto - 6 Pistas</title>
+  <title>MINI ESME 1.0 - Torneo Pádel Mixto</title>
+  <!-- Fuente moderna y deportiva -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,800;0,900;1,800;1,900&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #0f172a;
@@ -23,8 +27,35 @@
     body { background-color: var(--bg); color: var(--text); padding: 12px; }
     .container { max-width: 1250px; margin: 0 auto; }
 
-    h1, h2, h3 { text-align: center; margin-bottom: 12px; }
-    h1 { color: var(--accent); font-size: 1.6rem; }
+    /* CABECERA CON TÍTULO CHULO PERMANENTE */
+    .app-header {
+      text-align: center;
+      margin-bottom: 18px;
+      padding: 10px 0;
+    }
+    .main-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 2.3rem;
+      font-weight: 900;
+      font-style: italic;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #10b981 0%, #38bdf8 50%, #ec4899 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 4px 12px rgba(56, 189, 248, 0.35));
+      margin-bottom: 2px;
+      display: inline-block;
+    }
+    .sub-title {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    h2, h3 { text-align: center; margin-bottom: 12px; }
     
     .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 15px; margin-bottom: 15px; }
     .btn { background: var(--accent); color: white; border: none; padding: 10px 15px; border-radius: 6px; font-size: 0.95rem; font-weight: bold; cursor: pointer; width: 100%; transition: background 0.2s; text-align: center; }
@@ -126,7 +157,12 @@
 <body>
 
 <div class="container">
-  <h1>🎾 Torneo Pádel Mixto Express</h1>
+  
+  <!-- CABECERA PRINCIPAL CON FUENTE DESTACADA -->
+  <div class="app-header">
+    <div class="main-title">🎾 MINI ESME 1.0 🎾</div>
+    <div class="sub-title">Torneo Pádel Mixto Express • 6 Pistas</div>
+  </div>
 
   <!-- PANTALLA 1: REGISTRO DE JUGADORES (CON CONTADORES EN DIRECTO) -->
   <div id="setup-section" class="card">
@@ -308,7 +344,6 @@
     { ronda: 6, partidos: [[2, 15], [4, 16], [6, 1], [8, 3], [10, 5], [12, 7]], descansan: [9, 11, 13, 14] }
   ];
 
-  // Cálculo de descansos programados por pareja (1 al 16)
   function getRestRoundsForPair(pairId) {
     const restRounds = [];
     SCHEDULE.forEach(s => {
@@ -336,7 +371,7 @@
   };
 
   window.onload = () => {
-    const saved = localStorage.getItem('padel_torneo_data_v9');
+    const saved = localStorage.getItem('padel_torneo_data_v10');
     if (saved) {
       state = JSON.parse(saved);
       if (state.locked && state.pairs.length === 16) {
@@ -351,7 +386,7 @@
   };
 
   function saveState() {
-    localStorage.setItem('padel_torneo_data_v9', JSON.stringify(state));
+    localStorage.setItem('padel_torneo_data_v10', JSON.stringify(state));
   }
 
   function addPlayer() {
@@ -441,7 +476,6 @@
     let chicasDrive = shuffle(chicas.filter(p => p.pos === 'Drive'));
     let chicasPoli  = shuffle(chicas.filter(p => p.pos === 'Polivalente'));
 
-    // Balanceo con polivalentes
     while (chicasPoli.length > 0) {
       const p = chicasPoli.pop();
       if ((chicosReves.length - chicasDrive.length) > (chicosDrive.length - chicasReves.length)) {
@@ -460,8 +494,8 @@
       }
     }
 
-    while (chicosReves.length > chicasDrive.length && chicosReves.length > 0) chicosDrive.push(chicosReves.pop());
-    while (chicosDrive.length > chicasReves.length && chicosDrive.length > 0) chicosReves.push(chicosDrive.pop());
+    while (chicosReves.length > chicosDrive.length && chicosReves.length > 0) chicosDrive.push(chicosReves.pop());
+    while (chicosDrive.length > chicosReves.length && chicosDrive.length > 0) chicosReves.push(chicosDrive.pop());
     while (chicasDrive.length > chicosReves.length && chicasDrive.length > 0) chicasReves.push(chicasDrive.pop());
     while (chicasReves.length > chicosDrive.length && chicasReves.length > 0) chicosDrive.push(chicasReves.pop());
 
@@ -667,7 +701,6 @@
 
       html += `<div class="descansos">☕ <strong>Descansan en Ronda ${roundNum}:</strong> ${desc}</div>`;
 
-      // Botón Siguiente Ronda
       if (roundNum < 6) {
         html += `<button class="btn btn-next" onclick="goToNextRound(${roundNum + 1})">➡️ Guardar y Pasar a Ronda ${roundNum + 1}</button>`;
       } else {
@@ -934,7 +967,7 @@
   function confirmReset() {
     if (confirm('¿ATENCIÓN: Quieres borrar los resultados y reiniciar el torneo?')) {
       if (confirm('¿Confirmas de verdad? Esta acción no se puede deshacer.')) {
-        localStorage.removeItem('padel_torneo_data_v9');
+        localStorage.removeItem('padel_torneo_data_v10');
         location.reload();
       }
     }
