@@ -12,6 +12,7 @@
       --accent-hover: #059669;
       --gold: #f59e0b;
       --silver: #94a3b8;
+      --pink: #ec4899;
       --text: #f8fafc;
       --text-muted: #94a3b8;
       --border: #334155;
@@ -43,14 +44,30 @@
     .player-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 6px; margin-top: 10px; max-height: 220px; overflow-y: auto; }
     .player-badge { background: #334155; padding: 6px 8px; border-radius: 4px; font-size: 0.8rem; display: flex; justify-content: space-between; align-items: center; }
 
-    /* Pantalla de edición de parejas */
-    .pairs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin: 15px 0; }
+    /* Layout Pantalla Revisión */
+    .review-layout { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 15px; }
+    @media (min-width: 900px) {
+      .review-layout { grid-template-columns: 1.3fr 1fr; align-items: start; }
+      .rules-sticky { position: sticky; top: 10px; }
+    }
+
+    .pairs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
     .pair-edit-card { background: #0f172a; border: 1px solid var(--border); border-radius: 8px; padding: 10px; }
     .pair-edit-title { font-weight: bold; color: #38bdf8; margin-bottom: 6px; font-size: 0.85rem; }
     .pair-select-row { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
     .pair-select-row:last-child { margin-bottom: 0; }
     .pair-select-row label { font-size: 0.75rem; color: var(--text-muted); width: 45px; }
     .pair-select-row select { flex: 1; padding: 5px; font-size: 0.85rem; background: #1e293b; }
+
+    /* Caja de Dedicatoria y Normas */
+    .fun-banner { background: linear-gradient(135deg, rgba(236,72,153,0.15), rgba(245,158,11,0.15)); border: 1px solid var(--pink); border-radius: 8px; padding: 12px; margin-bottom: 12px; }
+    .fun-banner p { font-size: 0.88rem; line-height: 1.4; color: #fbcfe8; }
+    .fun-banner strong.tania { color: #f43f5e; font-size: 1rem; text-shadow: 0 0 8px rgba(244,63,94,0.4); }
+    
+    .rules-box { background: #0f172a; border: 1px solid var(--border); border-radius: 8px; padding: 12px; }
+    .rules-box h3 { color: #38bdf8; font-size: 1rem; margin-bottom: 8px; text-align: left; }
+    .rule-item { margin-bottom: 10px; font-size: 0.82rem; line-height: 1.35; color: #cbd5e1; }
+    .rule-item strong { color: #f8fafc; }
 
     /* Pestañas */
     .tabs { display: flex; gap: 6px; overflow-x: auto; margin-bottom: 15px; padding-bottom: 4px; }
@@ -59,7 +76,7 @@
     .tab-btn.gold { border-color: var(--gold); color: #fde68a; }
     .tab-btn.gold.active { background: var(--gold); color: #000; }
 
-    /* Layout con clasificación lateral */
+    /* Layout con clasificación lateral en torneo */
     .tournament-layout { display: grid; grid-template-columns: 1fr; gap: 15px; }
     @media (min-width: 850px) {
       .tournament-layout { grid-template-columns: 1.6fr 1.1fr; align-items: start; }
@@ -75,7 +92,6 @@
 
     .descansos { background: var(--descanso-bg); color: #cbd5e1; padding: 8px 12px; border-radius: 6px; font-size: 0.85rem; margin-top: 10px; }
 
-    /* Tablas de clasificación */
     table { width: 100%; border-collapse: collapse; text-align: left; }
     th, td { padding: 6px 8px; border-bottom: 1px solid var(--border); font-size: 0.8rem; }
     th { background: #0f172a; color: var(--text-muted); }
@@ -128,22 +144,71 @@
     </div>
   </div>
 
-  <!-- PANTALLA 2: REVISIÓN Y EDICIÓN PREVIA DE PAREJAS -->
+  <!-- PANTALLA 2: REVISIÓN DE PAREJAS + PANEL DE NORMAS Y BRIEFING -->
   <div id="review-section" class="card hidden">
-    <h2>👥 Revisión de Parejas Formadas</h2>
-    <p style="font-size: 0.85rem; color: var(--text-muted); text-align: center; margin-bottom: 10px;">
-      Revisa las parejas asignadas. Puedes cambiar jugadores con los desplegables antes de confirmar.
-    </p>
+    <h2>👥 Sorteo Realizado & Guía del Torneo</h2>
 
-    <div id="pairs-review-container" class="pairs-grid"></div>
+    <div class="review-layout">
+      <!-- Columna Izquierda: Parejas formadas -->
+      <div>
+        <h3 style="color: #38bdf8; font-size: 1.05rem; text-align: left; margin-bottom: 8px;">Parejas Asignadas (Editables)</h3>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px;">
+          Si necesitas hacer algún ajuste de última hora, cámbialo en los desplegables:
+        </p>
+        <div id="pairs-review-container" class="pairs-grid"></div>
+        
+        <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 8px;">
+          <button class="btn" style="font-size: 1.05rem; padding: 12px;" onclick="confirmPairsAndGenerateTournament()">
+            🔒 Confirmar Parejas y Generar Cuadro
+          </button>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn btn-warning" onclick="reShufflePairs()">🔄 Re-sortear Aleatoriamente</button>
+            <button class="btn btn-secondary" onclick="backToSetup()">⬅️ Volver al Registro</button>
+          </div>
+        </div>
+      </div>
 
-    <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 15px;">
-      <button class="btn" style="font-size: 1.05rem; padding: 12px;" onclick="confirmPairsAndGenerateTournament()">
-        🔒 Confirmar Parejas y Generar Cuadro
-      </button>
-      <div style="display: flex; gap: 8px;">
-        <button class="btn btn-warning" onclick="reShufflePairs()">🔄 Re-sortear Aleatoriamente</button>
-        <button class="btn btn-secondary" onclick="backToSetup()">⬅️ Volver al Registro</button>
+      <!-- Columna Derecha: Dedicatoria y Normas -->
+      <div class="rules-sticky">
+        
+        <!-- Mensaje de bienvenida -->
+        <div class="fun-banner">
+          <p style="margin-bottom: 6px;">
+            ✨ <em>"El destino ha querido que salgan estas parejas... La finalidad absoluta es <strong>divertirse y pasarlo en grande</strong>. ¡No se aceptan piques ni malas caras!"</em> 😉🎾
+          </p>
+          <p style="border-top: 1px dashed rgba(236,72,153,0.4); padding-top: 6px;">
+            🙏 <strong>Muchísimas gracias a Esme</strong> por todo el curre y la organización del mini... ¡recupérate pronto! ❤️<br>
+            🎂 <strong class="tania">¡¡Y MUCHÍSIMAS FELICIDADES TANIA!! 🥳🎉🍾</strong>
+          </p>
+        </div>
+
+        <!-- Panel de Reglas detalladas para cantar -->
+        <div class="rules-box">
+          <h3>📢 Normas y Funcionamiento (Cantar a los jugadores):</h3>
+          
+          <div class="rule-item">
+            ⏱️ <strong>Tiempos y Rondas:</strong> Son 6 rondas de <strong>20 minutos a tiempo corrido</strong> + <strong>5 minutos estrictos de cambio</strong>. ¡Máxima rapidez en los cambios de pista sin pelotear de más!
+          </div>
+
+          <div class="rule-item">
+            🎾 <strong>Sistema de Juego:</strong> Partidos continuos a juegos ganados. En `40-40` se juega <strong>Punto de Oro</strong> (resta elige lado). Al sonar la bocina se termina el punto en disputa y se registra el resultado final exacto.
+          </div>
+
+          <div class="rule-item">
+            🔢 <strong>Puntuación:</strong> 
+            <strong>3 Pts</strong> por partido ganado | <strong>1 Pt</strong> por empate | <strong>0 Pts</strong> por derrota. Desempate: Diferencia de juegos (JF - JC).
+          </div>
+
+          <div class="rule-item">
+            ☕ <strong>Descansos:</strong> Son 6 pistas para 16 parejas (12 jugando y 4 descansando por ronda). Todas las parejas jugarán entre 4 y 5 partidos.
+          </div>
+
+          <div class="rule-item">
+            🏆 <strong>Fases Finales (Playoffs):</strong> 
+            Del <strong>1º al 4º</strong> disputan el <strong>Cuadro de Oro</strong> (1º vs 4º y 2º vs 3º). Del <strong>5º al 8º</strong> disputan el <strong>Cuadro de Consolación (Plata)</strong>.
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -223,7 +288,7 @@
   };
 
   window.onload = () => {
-    const saved = localStorage.getItem('padel_torneo_data_v6');
+    const saved = localStorage.getItem('padel_torneo_data_v7');
     if (saved) {
       state = JSON.parse(saved);
       if (state.locked && state.pairs.length === 16) {
@@ -238,7 +303,7 @@
   };
 
   function saveState() {
-    localStorage.setItem('padel_torneo_data_v6', JSON.stringify(state));
+    localStorage.setItem('padel_torneo_data_v7', JSON.stringify(state));
   }
 
   function addPlayer() {
@@ -294,7 +359,7 @@
     let chicasDrive = shuffle(chicas.filter(p => p.pos === 'Drive'));
     let chicasPoli  = shuffle(chicas.filter(p => p.pos === 'Polivalente'));
 
-    // Balanceo con comodines polivalentes
+    // Balanceo con polivalentes
     while (chicasPoli.length > 0) {
       const p = chicasPoli.pop();
       if ((chicosReves.length - chicasDrive.length) > (chicosDrive.length - chicasReves.length)) {
@@ -520,7 +585,7 @@
 
       html += `<div class="descansos">☕ <strong>Descansan en Ronda ${roundNum}:</strong> ${desc}</div>`;
 
-      // BOTÓN SIGUIENTE RONDA
+      // Botón Siguiente Ronda
       if (roundNum < 6) {
         html += `<button class="btn btn-next" onclick="goToNextRound(${roundNum + 1})">➡️ Guardar y Pasar a Ronda ${roundNum + 1}</button>`;
       } else {
@@ -557,7 +622,6 @@
       id: p.id,
       pairObj: p,
       name: `P${p.id}: ${p.p1.name} & ${p.p2.name}`,
-      shortName: `P${p.id} (${p.p1.name.substring(0,4)}/${p.p2.name.substring(0,4)})`,
       pj: 0, pg: 0, pe: 0, pp: 0, jf: 0, jc: 0, pts: 0, dif: 0
     }));
 
@@ -783,7 +847,7 @@
   function confirmReset() {
     if (confirm('¿ATENCIÓN: Quieres borrar los resultados y reiniciar el torneo?')) {
       if (confirm('¿Confirmas de verdad? Esta acción no se puede deshacer.')) {
-        localStorage.removeItem('padel_torneo_data_v6');
+        localStorage.removeItem('padel_torneo_data_v7');
         location.reload();
       }
     }
