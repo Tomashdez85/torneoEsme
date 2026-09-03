@@ -120,12 +120,24 @@
     }
 
     .pairs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
-    .pair-edit-card { background: #0f172a; border: 1px solid var(--border); border-radius: 8px; padding: 10px; }
+    .pair-edit-card { background: #0f172a; border: 1px solid var(--border); border-radius: 8px; padding: 10px; position: relative; }
     .pair-edit-title { font-weight: bold; color: #38bdf8; margin-bottom: 6px; font-size: 0.85rem; }
     .pair-select-row { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
     .pair-select-row:last-child { margin-bottom: 0; }
     .pair-select-row label { font-size: 0.75rem; color: var(--text-muted); width: 45px; }
     .pair-select-row select { flex: 1; padding: 5px; font-size: 0.85rem; background: #1e293b; }
+
+    .marta-badge {
+      background: rgba(236,72,153,0.25);
+      border: 1px solid var(--pink);
+      color: #fbcfe8;
+      font-size: 0.75rem;
+      padding: 3px 6px;
+      border-radius: 4px;
+      margin-bottom: 6px;
+      display: inline-block;
+      font-weight: bold;
+    }
 
     /* Caja de Dedicatoria y Normas */
     .fun-banner { background: linear-gradient(135deg, rgba(236,72,153,0.15), rgba(245,158,11,0.15)); border: 1px solid var(--pink); border-radius: 8px; padding: 12px; margin-bottom: 12px; }
@@ -289,6 +301,11 @@
         <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px;">
           Si necesitas hacer algún ajuste de última hora, cámbialo en los desplegables:
         </p>
+
+        <div id="marta-notice" style="display:none; background: rgba(56, 189, 248, 0.15); border: 1px solid #38bdf8; border-radius: 6px; padding: 8px 12px; font-size: 0.82rem; margin-bottom: 12px; color: #bae6fd;">
+          🕒 <strong>Ajuste horario aplicado:</strong> La pareja donde juega <strong>Marta</strong> ha sido asignada a la <strong>Pareja 13</strong> para que descanse en la <strong>Ronda 1</strong> y pueda llegar sin retrasar el torneo.
+        </div>
+
         <div id="pairs-review-container" class="pairs-grid"></div>
         
         <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 8px;">
@@ -434,7 +451,7 @@
       cons_final: { j1: '', j2: '' }
     },
     activeTab: 'r1',
-    expandedPairId: null // Control del acordeón desplegable en la clasificación
+    expandedPairId: null
   };
 
   function getCurrentSchedule() {
@@ -451,7 +468,7 @@
   }
 
   window.onload = () => {
-    const saved = localStorage.getItem('padel_torneo_data_v13');
+    const saved = localStorage.getItem('padel_torneo_data_v14');
     if (saved) {
       state = JSON.parse(saved);
       if (!state.mode) state.mode = 28;
@@ -470,7 +487,7 @@
   };
 
   function saveState() {
-    localStorage.setItem('padel_torneo_data_v13', JSON.stringify(state));
+    localStorage.setItem('padel_torneo_data_v14', JSON.stringify(state));
   }
 
   function setTournamentMode(num) {
@@ -611,8 +628,8 @@
 
     while (chicosReves.length > chicosDrive.length && chicosReves.length > 0) chicosDrive.push(chicosReves.pop());
     while (chicosDrive.length > chicosReves.length && chicosDrive.length > 0) chicosReves.push(chicosDrive.pop());
-    while (chicasDrive.length > chicosReves.length && chicosDrive.length > 0) chicasReves.push(chicasDrive.pop());
-    while (chicasReves.length > chicosDrive.length && chicosReves.length > 0) chicasDrive.push(chicasReves.pop());
+    while (chicasDrive.length > chicosReves.length && chicasDrive.length > 0) chicasReves.push(chicasDrive.pop());
+    while (chicasReves.length > chicosDrive.length && chicasReves.length > 0) chicosDrive.push(chicasReves.pop());
 
     const pairs = [];
     const t1 = Math.min(chicosReves.length, chicasDrive.length);
@@ -620,8 +637,38 @@
     const t2 = Math.min(chicosDrive.length, chicasReves.length);
     for (let i = 0; i < t2; i++) pairs.push({ id: pairs.length + 1, p1: chicosDrive[i], p2: chicasReves[i] });
 
+    // AJUSTE AUTOMÁTICO PARA MARTA: Descansar en Ronda 1 (Pareja 13)
+    // En ambos calendarios (28 y 32), la Pareja 13 siempre descansa en la Ronda 1.
+    const martaPairIndex = pairs.findIndex(p => 
+      p.p1.name.trim().toLowerCase().includes('marta') || 
+      p.p2.name.trim().toLowerCase().includes('marta')
+    );
+
+    if (martaPairIndex !== -1 && martaPairIndex !== 12) {
+      // Intercambiar los componentes de la pareja de Marta con la pareja 13 (índice 12)
+      const pMarta = pairs[martaPairIndex];
+      const p13 = pairs[12];
+
+      const tempP1 = pMarta.p1;
+      const tempP2 = pMarta.p2;
+
+      pMarta.p1 = p13.p1;
+      pMarta.p2 = p13.p2;
+
+      p13.p1 = tempP1;
+      p13.p2 = tempP2;
+    }
+
     state.pairs = pairs;
     return true;
+  }
+
+  function checkMartaNotice() {
+    const hasMarta = state.pairs.some(p => 
+      p.id === 13 && (p.p1.name.toLowerCase().includes('marta') || p.p2.name.toLowerCase().includes('marta'))
+    );
+    const notice = document.getElementById('marta-notice');
+    if (notice) notice.style.display = hasMarta ? 'block' : 'none';
   }
 
   function startPairReview() {
@@ -660,9 +707,14 @@
     const chicos = state.players.filter(p => p.gender === 'H');
     const chicas = state.players.filter(p => p.gender === 'M');
 
+    checkMartaNotice();
+
     state.pairs.forEach((pair, pairIdx) => {
       const card = document.createElement('div');
       card.className = 'pair-edit-card';
+
+      const containsMarta = pair.p1.name.toLowerCase().includes('marta') || pair.p2.name.toLowerCase().includes('marta');
+      const martaTag = containsMarta ? `<div class="marta-badge">🕒 Descansa Ronda 1</div>` : '';
 
       let optionsChicos = chicos.map(c => `
         <option value="${c.name}" ${c.name === pair.p1.name ? 'selected' : ''}>
@@ -678,6 +730,7 @@
 
       card.innerHTML = `
         <div class="pair-edit-title">Pareja ${pair.id}</div>
+        ${martaTag}
         <div class="pair-select-row">
           <label>Chico:</label>
           <select onchange="swapPlayer(${pairIdx}, 'H', this.value)">${optionsChicos}</select>
@@ -849,7 +902,6 @@
     renderSidebarStandings();
   }
 
-  // MOTOR MATEMÁTICO DE CLASIFICACIÓN POR RATIO
   function calculateStandings() {
     const sched = getCurrentSchedule();
     const stats = state.pairs.map(p => ({
@@ -892,7 +944,6 @@
     return stats;
   }
 
-  // Genera el historial detallado de las 6 rondas para una pareja con semáforo
   function getPairRoundsDetailHtml(pairId) {
     const sched = getCurrentSchedule();
     let html = `<div class="detail-box">`;
@@ -1002,7 +1053,6 @@
         </tr>
       `;
 
-      // Fila Acordeón si está desplegada
       if (isExpanded) {
         tbody.innerHTML += `
           <tr class="detail-row">
@@ -1184,7 +1234,7 @@
   function confirmReset() {
     if (confirm('¿ATENCIÓN: Quieres borrar los resultados y reiniciar el torneo?')) {
       if (confirm('¿Confirmas de verdad? Esta acción no se puede deshacer.')) {
-        localStorage.removeItem('padel_torneo_data_v13');
+        localStorage.removeItem('padel_torneo_data_v14');
         location.reload();
       }
     }
