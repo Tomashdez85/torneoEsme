@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MINI ESME 1.0 - Torneo Pádel Mixto</title>
-  <!-- Fuente moderna y deportiva -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,800;0,900;1,800;1,900&display=swap" rel="stylesheet">
@@ -25,17 +24,12 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background-color: var(--bg); color: var(--text); padding: 12px; }
-    .container { max-width: 1300px; margin: 0 auto; }
+    .container { max-width: 1250px; margin: 0 auto; }
 
-    /* CABECERA CON TÍTULO CHULO PERMANENTE */
-    .app-header {
-      text-align: center;
-      margin-bottom: 14px;
-      padding: 6px 0;
-    }
+    .app-header { text-align: center; margin-bottom: 16px; padding: 6px 0; }
     .main-title {
       font-family: 'Montserrat', sans-serif;
-      font-size: 2.3rem;
+      font-size: 2.2rem;
       font-weight: 900;
       font-style: italic;
       letter-spacing: 2px;
@@ -47,38 +41,7 @@
       margin-bottom: 2px;
       display: inline-block;
     }
-    .sub-title {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-
-    /* Selector de Modalidad 28 / 32 */
-    .mode-selector {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin: 12px 0 16px 0;
-    }
-    .mode-btn {
-      background: #1e293b;
-      color: var(--text-muted);
-      border: 2px solid var(--border);
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-weight: bold;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .mode-btn.active {
-      background: #0284c7;
-      color: white;
-      border-color: #38bdf8;
-      box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
-    }
+    .sub-title { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
 
     h2, h3 { text-align: center; margin-bottom: 12px; }
     
@@ -97,7 +60,6 @@
     .grid-form { display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 6px; margin-bottom: 10px; }
     input, select { background: #0f172a; border: 1px solid var(--border); color: white; padding: 8px; border-radius: 6px; font-size: 0.9rem; }
 
-    /* Contadores en Tiempo Real */
     .counters-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px 0; }
     @media (max-width: 600px) { .counters-grid { grid-template-columns: 1fr; } }
     .counter-card { background: #0f172a; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; }
@@ -112,7 +74,6 @@
     .player-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 6px; margin-top: 10px; max-height: 220px; overflow-y: auto; }
     .player-badge { background: #334155; padding: 6px 8px; border-radius: 4px; font-size: 0.8rem; display: flex; justify-content: space-between; align-items: center; }
 
-    /* Layout Pantalla Revisión */
     .review-layout { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 15px; }
     @media (min-width: 900px) {
       .review-layout { grid-template-columns: 1.3fr 1fr; align-items: start; }
@@ -120,26 +81,13 @@
     }
 
     .pairs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
-    .pair-edit-card { background: #0f172a; border: 1px solid var(--border); border-radius: 8px; padding: 10px; position: relative; }
+    .pair-edit-card { background: #0f172a; border: 1px solid var(--border); border-radius: 8px; padding: 10px; }
     .pair-edit-title { font-weight: bold; color: #38bdf8; margin-bottom: 6px; font-size: 0.85rem; }
     .pair-select-row { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
     .pair-select-row:last-child { margin-bottom: 0; }
-    .pair-select-row label { font-size: 0.75rem; color: var(--text-muted); width: 45px; }
+    .pair-select-row label { font-size: 0.75rem; color: var(--text-muted); width: 65px; }
     .pair-select-row select { flex: 1; padding: 5px; font-size: 0.85rem; background: #1e293b; }
 
-    .marta-badge {
-      background: rgba(236,72,153,0.25);
-      border: 1px solid var(--pink);
-      color: #fbcfe8;
-      font-size: 0.75rem;
-      padding: 3px 6px;
-      border-radius: 4px;
-      margin-bottom: 6px;
-      display: inline-block;
-      font-weight: bold;
-    }
-
-    /* Caja de Dedicatoria y Normas */
     .fun-banner { background: linear-gradient(135deg, rgba(236,72,153,0.15), rgba(245,158,11,0.15)); border: 1px solid var(--pink); border-radius: 8px; padding: 12px; margin-bottom: 12px; }
     .fun-banner p { font-size: 0.88rem; line-height: 1.4; color: #fbcfe8; }
     .fun-banner strong.tania { color: #f43f5e; font-size: 1rem; text-shadow: 0 0 8px rgba(244,63,94,0.4); }
@@ -149,17 +97,15 @@
     .rule-item { margin-bottom: 10px; font-size: 0.82rem; line-height: 1.35; color: #cbd5e1; }
     .rule-item strong { color: #f8fafc; }
 
-    /* Pestañas */
     .tabs { display: flex; gap: 6px; overflow-x: auto; margin-bottom: 15px; padding-bottom: 4px; }
     .tab-btn { background: var(--card-bg); border: 1px solid var(--border); color: var(--text-muted); padding: 8px 12px; border-radius: 6px; cursor: pointer; white-space: nowrap; font-size: 0.85rem; }
     .tab-btn.active { background: var(--accent); color: white; font-weight: bold; border-color: var(--accent); }
     .tab-btn.gold { border-color: var(--gold); color: #fde68a; }
     .tab-btn.gold.active { background: var(--gold); color: #000; }
 
-    /* Layout con clasificación lateral en torneo */
     .tournament-layout { display: grid; grid-template-columns: 1fr; gap: 15px; }
-    @media (min-width: 980px) {
-      .tournament-layout { grid-template-columns: 1.25fr 1.35fr; align-items: start; }
+    @media (min-width: 920px) {
+      .tournament-layout { grid-template-columns: 1.35fr 1.15fr; align-items: start; }
       .sidebar-sticky { position: sticky; top: 10px; }
     }
 
@@ -172,43 +118,17 @@
 
     .descansos { background: var(--descanso-bg); color: #cbd5e1; padding: 8px 12px; border-radius: 6px; font-size: 0.85rem; margin-top: 10px; }
 
-    /* Tabla de Clasificación con Filas Desplegables */
     table { width: 100%; border-collapse: collapse; text-align: left; }
-    th, td { padding: 6px 6px; border-bottom: 1px solid var(--border); font-size: 0.76rem; }
+    th, td { padding: 6px 7px; border-bottom: 1px solid var(--border); font-size: 0.78rem; }
     th { background: #0f172a; color: var(--text-muted); }
     
-    .row-clickable { cursor: pointer; transition: background 0.15s; }
-    .row-clickable:hover { background: rgba(56, 189, 248, 0.08); }
     .top4-row { background: rgba(245, 158, 11, 0.12); }
     .consolation-row { background: rgba(148, 163, 184, 0.1); }
     
     .tag-badge { font-size: 0.65rem; padding: 1px 4px; border-radius: 3px; margin-left: 3px; font-weight: bold; }
     .tag-gold { background: var(--gold); color: #000; }
     .tag-silver { background: #64748b; color: #fff; }
-    .tag-rest { background: #334155; color: #94a3b8; padding: 1px 4px; border-radius: 3px; font-size: 0.7rem; }
-
-    /* Fila expandida de detalle de rondas */
-    .detail-row td { background: #0a0f1d; padding: 8px 10px; border-bottom: 2px solid var(--border); }
-    .detail-box { display: flex; flex-direction: column; gap: 4px; }
-    .round-detail-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 4px 8px;
-      border-radius: 4px;
-      background: #131d33;
-      font-size: 0.74rem;
-    }
-    .round-label { font-weight: bold; color: #38bdf8; width: 55px; }
-    .rival-label { flex: 1; color: #cbd5e1; margin: 0 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .score-badge { font-weight: bold; padding: 2px 8px; border-radius: 4px; font-size: 0.76rem; min-width: 50px; text-align: center; }
-    
-    /* Semáforo de colores para resultados */
-    .res-win { color: #10b981; background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.4); }
-    .res-draw { color: #f59e0b; background: rgba(245, 158, 11, 0.2); border: 1px solid rgba(245, 158, 11, 0.4); }
-    .res-loss { color: #ef4444; background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); }
-    .res-rest { color: #94a3b8; background: #1e293b; border: 1px solid var(--border); }
-    .res-pending { color: #64748b; background: transparent; }
+    .tag-rest { background: #334155; color: #94a3b8; padding: 1px 4px; border-radius: 3px; font-size: 0.72rem; }
 
     .bracket-section { border-left: 3px solid var(--border); padding-left: 10px; margin-bottom: 20px; }
     .bracket-gold { border-left-color: var(--gold); }
@@ -221,30 +141,19 @@
 
 <div class="container">
   
-  <!-- CABECERA PRINCIPAL CON FUENTE DESTACADA -->
   <div class="app-header">
     <div class="main-title">🎾 MINI ESME 1.0 🎾</div>
     <div class="sub-title">Torneo Pádel Mixto Express • 6 Pistas</div>
   </div>
 
-  <!-- PANTALLA 1: REGISTRO DE JUGADORES (CON SELECTOR DE 28 O 32) -->
+  <!-- PANTALLA 1: REGISTRO DE JUGADORES -->
   <div id="setup-section" class="card">
-    <div style="text-align: center; margin-bottom: 8px;">
-      <span style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: bold;">Configurar Participantes:</span>
-    </div>
-    <div class="mode-selector">
-      <button id="btn-mode-28" class="mode-btn active" onclick="setTournamentMode(28)">👥 28 Jugadores (14 parejas)</button>
-      <button id="btn-mode-32" class="mode-btn" onclick="setTournamentMode(32)">👥 32 Jugadores (16 parejas)</button>
-    </div>
-
-    <h2>1. Registro de Jugadores (<span id="player-count">0</span>/<span id="target-total">28</span>)</h2>
+    <h2>1. Registro de Jugadores (<span id="player-count">0</span>/32)</h2>
     
-    <!-- CONTADORES EN TIEMPO REAL -->
     <div class="counters-grid">
-      <!-- Tarjeta Chicos -->
       <div class="counter-card boys">
         <div class="counter-header">
-          <span style="color: #38bdf8;">👦 Chicos: <span id="count-boys-total">0</span>/<span id="target-boys">14</span></span>
+          <span style="color: #38bdf8;">👦 Bombo 1 (Chicos): <span id="count-boys-total">0</span>/16</span>
           <span id="badge-boys-ready" style="font-size: 0.8rem;"></span>
         </div>
         <div class="counter-badges">
@@ -254,10 +163,9 @@
         </div>
       </div>
 
-      <!-- Tarjeta Chicas -->
       <div class="counter-card girls">
         <div class="counter-header">
-          <span style="color: #f472b6;">👧 Chicas: <span id="count-girls-total">0</span>/<span id="target-girls">14</span></span>
+          <span style="color: #f472b6;">👧 Bombo 2 (Chicas/Pareja 2): <span id="count-girls-total">0</span>/16</span>
           <span id="badge-girls-ready" style="font-size: 0.8rem;"></span>
         </div>
         <div class="counter-badges">
@@ -271,8 +179,8 @@
     <div class="grid-form">
       <input type="text" id="p-name" placeholder="Nombre jugador/a">
       <select id="p-gender">
-        <option value="H">Chico</option>
-        <option value="M">Chica</option>
+        <option value="H">Bombo 1 (Chico)</option>
+        <option value="M">Bombo 2 (Chica)</option>
       </select>
       <select id="p-pos">
         <option value="Reves">Revés</option>
@@ -286,26 +194,20 @@
 
     <div style="margin-top: 15px; display: flex; gap: 8px;">
       <button class="btn" onclick="startPairReview()">🎲 Sortear Parejas</button>
-      <button class="btn btn-secondary" style="width: auto;" onclick="loadDemoData()">Cargar Demo</button>
+      <button class="btn btn-secondary" style="width: auto;" onclick="loadExactUserData()">Cargar tu lista (32)</button>
     </div>
   </div>
 
-  <!-- PANTALLA 2: REVISIÓN DE PAREJAS + PANEL DE NORMAS Y BRIEFING -->
+  <!-- PANTALLA 2: REVISIÓN DE PAREJAS + PANEL DE NORMAS -->
   <div id="review-section" class="card hidden">
     <h2>👥 Sorteo Realizado & Guía del Torneo</h2>
 
     <div class="review-layout">
-      <!-- Columna Izquierda: Parejas formadas -->
       <div>
-        <h3 style="color: #38bdf8; font-size: 1.05rem; text-align: left; margin-bottom: 8px;">Parejas Asignadas (Editables)</h3>
+        <h3 style="color: #38bdf8; font-size: 1.05rem; text-align: left; margin-bottom: 8px;">Parejas Asignadas (16 Parejas)</h3>
         <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px;">
-          Si necesitas hacer algún ajuste de última hora, cámbialo en los desplegables:
+          Puedes intercambiar cualquier jugador/a desde los desplegables antes de fijar el cuadro:
         </p>
-
-        <div id="marta-notice" style="display:none; background: rgba(56, 189, 248, 0.15); border: 1px solid #38bdf8; border-radius: 6px; padding: 8px 12px; font-size: 0.82rem; margin-bottom: 12px; color: #bae6fd;">
-          🕒 <strong>Ajuste horario aplicado:</strong> La pareja donde juega <strong>Marta</strong> ha sido asignada a la <strong>Pareja 13</strong> para que descanse en la <strong>Ronda 1</strong> y pueda llegar sin retrasar el torneo.
-        </div>
-
         <div id="pairs-review-container" class="pairs-grid"></div>
         
         <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 8px;">
@@ -319,10 +221,7 @@
         </div>
       </div>
 
-      <!-- Columna Derecha: Dedicatoria y Normas -->
       <div class="rules-sticky">
-        
-        <!-- Mensaje de bienvenida -->
         <div class="fun-banner">
           <p style="margin-bottom: 6px;">
             ✨ <em>"El destino ha querido que salgan estas parejas... La finalidad absoluta es <strong>divertirse y pasarlo en grande</strong>. ¡No se aceptan piques ni malas caras!"</em> 😉🎾
@@ -333,89 +232,59 @@
           </p>
         </div>
 
-        <!-- Panel de Reglas detalladas para cantar -->
         <div class="rules-box">
           <h3>📢 Normas y Funcionamiento (Cantar a los jugadores):</h3>
-          
-          <div class="rule-item">
-            ⏱️ <strong>Tiempos y Rondas:</strong> Son 6 rondas de <strong>20 minutos a tiempo corrido</strong> + <strong>5 minutos estrictos de cambio</strong>. ¡Máxima rapidez en los cambios de pista sin pelotear de más!
-          </div>
-
-          <div class="rule-item">
-            🎾 <strong>Sistema de Juego:</strong> Partidos continuos a juegos ganados. En `40-40` se juega <strong>Punto de Oro</strong> (resta elige lado). Al sonar la bocina se termina el punto en disputa y se registra el resultado final exacto.
-          </div>
-
-          <div class="rule-item">
-            ⚖️ <strong>Clasificación Justa por RATIO (Pts/PJ):</strong> 
-            Como por cuadrante algunas parejas juegan 5 partidos y otras 6 (o 4 y 5), <strong>la tabla se ordena por PROMEDIO (Puntos / Partidos Jugados)</strong>. ¡Nadie se ve perjudicado por descansar más o menos! Desempate: Promedio de Diferencial de Juegos (Dif/PJ).
-          </div>
-
-          <div class="rule-item">
-            ☕ <strong>Descansos:</strong> 
-            <span id="rules-rest-info">6 pistas para 14 parejas: juegan 12 parejas y <strong>solo descansan 2 parejas</strong> por ronda.</span>
-          </div>
-
-          <div class="rule-item">
-            🏆 <strong>Fases Finales (Playoffs):</strong> 
-            Del <strong>1º al 4º</strong> disputan el <strong>Cuadro de Oro</strong> (1º vs 4º y 2º vs 3º). Del <strong>5º al 8º</strong> disputan el <strong>Cuadro de Consolación (Plata)</strong>.
-          </div>
+          <div class="rule-item">⏱️ <strong>Tiempos:</strong> 6 rondas de <strong>20 min de juego</strong> + <strong>5 min estrictos de cambio</strong>.</div>
+          <div class="rule-item">🎾 <strong>Sistema de Juego:</strong> Partidos continuos a juegos ganados. En `40-40` se juega <strong>Punto de Oro</strong> (resta elige lado).</div>
+          <div class="rule-item">🔢 <strong>Puntuación:</strong> <strong>3 Pts</strong> ganado | <strong>1 Pt</strong> empate | <strong>0 Pts</strong> derrota. Desempate: Diferencia de juegos (JF - JC).</div>
+          <div class="rule-item">☕ <strong>Descansos:</strong> 6 pistas para 16 parejas (12 jugando y 4 descansando por ronda). Todas juegan 4 o 5 partidos.</div>
+          <div class="rule-item">🏆 <strong>Playoffs:</strong> Del <strong>1º al 4º</strong> al Cuadro de Oro (1º vs 4º y 2º vs 3º). Del <strong>5º al 8º</strong> al Cuadro de Plata.</div>
         </div>
-
       </div>
     </div>
   </div>
 
-  <!-- PANTALLA 3: TORNEO EN CURSO (CON CLASIFICACIÓN LATERAL Y DETALLE DESPLEGABLE) -->
+  <!-- PANTALLA 3: TORNEO EN CURSO -->
   <div id="tournament-section" class="hidden">
     <div class="tabs" id="tabs-container"></div>
 
     <div class="tournament-layout">
-      
-      <!-- COLUMNA PRINCIPAL (RONDAS / FASES FINALES) -->
       <div class="main-column">
         <div id="round-view" class="card"></div>
-
         <div id="finals-view" class="card hidden">
           <h2>🏆 Fases Finales</h2>
           <div id="finals-content"></div>
         </div>
-
         <button class="btn btn-danger" onclick="confirmReset()">⚠️ Reiniciar Todo el Torneo</button>
       </div>
 
-      <!-- COLUMNA LATERAL (CLASIFICACIÓN EN VIVO CON DESPLEGABLES DE RONDA) -->
       <div class="sidebar-column">
         <div class="card sidebar-sticky">
-          <h3 style="color: #38bdf8; font-size: 1.1rem; margin-bottom: 4px;">📊 Clasificación por Ratio</h3>
-          <p style="font-size: 0.74rem; color: var(--text-muted); margin-bottom: 8px; text-align: center;">
-            Haz clic en cualquier pareja para desplegar sus partidos.<br>
-            <span style="color:#10b981; font-weight:bold;">● Ganado</span> | 
-            <span style="color:#f59e0b; font-weight:bold;">● Empate</span> | 
-            <span style="color:#ef4444; font-weight:bold;">● Perdido</span>
+          <h3 style="color: #38bdf8; font-size: 1.1rem; margin-bottom: 6px;">📊 Clasificación en Directo</h3>
+          <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px; text-align: center;">
+            <span class="tag-badge tag-gold">1º-4º Oro</span> | <span class="tag-badge tag-silver">5º-8º Plata</span>
           </p>
           <table>
             <thead>
               <tr>
                 <th>#</th>
-                <th>Pareja (Toca para ver)</th>
+                <th>Pareja</th>
                 <th>PJ</th>
-                <th>Ratio Pts</th>
-                <th>Ratio Dif</th>
-                <th>Desc.</th>
+                <th>Pts</th>
+                <th>Dif</th>
+                <th>Descansos</th>
               </tr>
             </thead>
             <tbody id="sidebar-standings-body"></tbody>
           </table>
         </div>
       </div>
-
     </div>
   </div>
 </div>
 
 <script>
-  // CALENDARIO A: 32 Jugadores (16 Parejas, 6 pistas, 4 descansan)
-  const SCHEDULE_32 = [
+  const SCHEDULE = [
     { ronda: 1, partidos: [[1, 2], [3, 4], [5, 6], [7, 8], [9, 10], [11, 12]], descansan: [13, 14, 15, 16] },
     { ronda: 2, partidos: [[13, 1], [14, 3], [15, 5], [16, 7], [2, 9], [4, 11]], descansan: [6, 8, 10, 12] },
     { ronda: 3, partidos: [[6, 13], [8, 14], [10, 15], [12, 16], [1, 4], [3, 2]], descansan: [5, 7, 9, 11] },
@@ -424,18 +293,15 @@
     { ronda: 6, partidos: [[2, 15], [4, 16], [6, 1], [8, 3], [10, 5], [12, 7]], descansan: [9, 11, 13, 14] }
   ];
 
-  // CALENDARIO B: 28 Jugadores (14 Parejas, 6 pistas, solo 2 descansan por ronda)
-  const SCHEDULE_28 = [
-    { ronda: 1, partidos: [[1, 2], [3, 4], [5, 6], [7, 8], [9, 10], [11, 12]], descansan: [13, 14] },
-    { ronda: 2, partidos: [[3, 5], [4, 6], [7, 9], [8, 10], [11, 13], [12, 14]], descansan: [1, 2] },
-    { ronda: 3, partidos: [[1, 5], [2, 6], [7, 10], [8, 9], [11, 14], [12, 13]], descansan: [3, 4] },
-    { ronda: 4, partidos: [[1, 3], [2, 4], [7, 11], [8, 12], [9, 13], [10, 14]], descansan: [5, 6] },
-    { ronda: 5, partidos: [[1, 4], [2, 3], [5, 9], [6, 11], [10, 12], [13, 14]], descansan: [7, 8] },
-    { ronda: 6, partidos: [[1, 6], [2, 5], [3, 11], [4, 12], [7, 13], [8, 14]], descansan: [9, 10] }
-  ];
+  function getRestRoundsForPair(pairId) {
+    const restRounds = [];
+    SCHEDULE.forEach(s => {
+      if (s.descansan.includes(pairId)) restRounds.push(s.ronda);
+    });
+    return restRounds;
+  }
 
   let state = {
-    mode: 28,
     screen: 'setup',
     locked: false,
     players: [],
@@ -450,72 +316,26 @@
       cons_sf2: { j1: '', j2: '' },
       cons_final: { j1: '', j2: '' }
     },
-    activeTab: 'r1',
-    expandedPairId: null
+    activeTab: 'r1'
   };
 
-  function getCurrentSchedule() {
-    return state.mode === 28 ? SCHEDULE_28 : SCHEDULE_32;
-  }
-
-  function getRestRoundsForPair(pairId) {
-    const sched = getCurrentSchedule();
-    const restRounds = [];
-    sched.forEach(s => {
-      if (s.descansan.includes(pairId)) restRounds.push(s.ronda);
-    });
-    return restRounds;
-  }
-
   window.onload = () => {
-    const saved = localStorage.getItem('padel_torneo_data_v14');
+    const saved = localStorage.getItem('padel_torneo_data_v11');
     if (saved) {
       state = JSON.parse(saved);
-      if (!state.mode) state.mode = 28;
-      applyModeUI();
-      if (state.locked && state.pairs.length === (state.mode / 2)) {
+      if (state.locked && state.pairs.length === 16) {
         showTournament();
         return;
-      } else if (state.screen === 'review' && state.pairs.length === (state.mode / 2)) {
+      } else if (state.screen === 'review' && state.pairs.length === 16) {
         showReviewScreen();
         return;
       }
-    } else {
-      applyModeUI();
     }
     renderPlayers();
   };
 
   function saveState() {
-    localStorage.setItem('padel_torneo_data_v14', JSON.stringify(state));
-  }
-
-  function setTournamentMode(num) {
-    if (state.locked) return;
-    state.mode = num;
-    applyModeUI();
-    renderPlayers();
-    saveState();
-  }
-
-  function applyModeUI() {
-    const is28 = state.mode === 28;
-    document.getElementById('btn-mode-28').className = `mode-btn ${is28 ? 'active' : ''}`;
-    document.getElementById('btn-mode-32').className = `mode-btn ${!is28 ? 'active' : ''}`;
-    
-    const targetTotal = state.mode;
-    const targetGender = state.mode / 2;
-
-    document.getElementById('target-total').innerText = targetTotal;
-    document.getElementById('target-boys').innerText = targetGender;
-    document.getElementById('target-girls').innerText = targetGender;
-
-    const restInfo = document.getElementById('rules-rest-info');
-    if (restInfo) {
-      restInfo.innerHTML = is28 
-        ? "6 pistas para 14 parejas: juegan 12 parejas y <strong>solo descansan 2 parejas</strong> por ronda."
-        : "6 pistas para 16 parejas: juegan 12 parejas y <strong>descansan 4 parejas</strong> por ronda.";
-    }
+    localStorage.setItem('padel_torneo_data_v11', JSON.stringify(state));
   }
 
   function addPlayer() {
@@ -525,12 +345,11 @@
     const pos = document.getElementById('p-pos').value;
 
     if (!name) return alert('Escribe un nombre');
-    if (state.players.length >= state.mode) return alert(`Límite de ${state.mode} jugadores alcanzado para esta modalidad.`);
+    if (state.players.length >= 32) return alert('Límite de 32 jugadores alcanzado');
 
-    const targetGender = state.mode / 2;
     const totalGender = state.players.filter(p => p.gender === gender).length;
-    if (totalGender >= targetGender) {
-      return alert(`Ya hay ${targetGender} ${gender === 'H' ? 'chicos' : 'chicas'} registrados.`);
+    if (totalGender >= 16) {
+      return alert(`Ya hay 16 en el ${gender === 'H' ? 'Bombo 1' : 'Bombo 2'}.`);
     }
 
     state.players.push({ name, gender, pos });
@@ -550,7 +369,6 @@
   function updateCounters() {
     const boys = state.players.filter(p => p.gender === 'H');
     const girls = state.players.filter(p => p.gender === 'M');
-    const targetGender = state.mode / 2;
 
     const bReves = boys.filter(p => p.pos === 'Reves').length;
     const bDrive = boys.filter(p => p.pos === 'Drive').length;
@@ -570,8 +388,8 @@
     document.getElementById('count-girls-reves').innerText = gReves;
     document.getElementById('count-girls-poli').innerText = gPoli;
 
-    document.getElementById('badge-boys-ready').innerHTML = boys.length === targetGender ? '<span class="ready-tag">✓ Completo</span>' : '';
-    document.getElementById('badge-girls-ready').innerHTML = girls.length === targetGender ? '<span class="ready-tag">✓ Completo</span>' : '';
+    document.getElementById('badge-boys-ready').innerHTML = boys.length === 16 ? '<span class="ready-tag">✓ 16 Listos</span>' : '';
+    document.getElementById('badge-girls-ready').innerHTML = girls.length === 16 ? '<span class="ready-tag">✓ 16 Listos</span>' : '';
   }
 
   function renderPlayers() {
@@ -580,7 +398,7 @@
     state.players.forEach((p, index) => {
       const badge = document.createElement('div');
       badge.className = 'player-badge';
-      badge.innerHTML = `<span>${p.name} (${p.gender === 'H' ? 'Chico' : 'Chica'} - ${p.pos})</span>
+      badge.innerHTML = `<span>${p.name} (${p.gender === 'H' ? 'Bombo 1' : 'Bombo 2'} - ${p.pos})</span>
                          <span style="cursor:pointer; color:#f87171;" onclick="removePlayer(${index})">&times;</span>`;
       container.appendChild(badge);
     });
@@ -590,89 +408,73 @@
 
   function shuffle(arr) { return arr.sort(() => Math.random() - 0.5); }
 
+  // ALGORITMO ROBUSTO QUE GARANTIZA 16 PAREJAS EXACTAS
   function buildPairsAlgorithm() {
-    const targetGender = state.mode / 2;
     const chicos = state.players.filter(p => p.gender === 'H');
     const chicas = state.players.filter(p => p.gender === 'M');
 
-    if (chicos.length !== targetGender || chicas.length !== targetGender) {
-      alert(`Deben ser exactamente ${targetGender} chicos y ${targetGender} chicas (Actualmente: ${chicos.length} chicos y ${chicas.length} chicas).`);
+    if (chicos.length !== 16 || chicas.length !== 16) {
+      alert(`Deben ser exactamente 16 en Bombo 1 y 16 en Bombo 2.\nActualmente tienes: ${chicos.length} en Bombo 1 y ${chicas.length} en Bombo 2.`);
       return false;
     }
 
-    let chicosReves = shuffle(chicos.filter(p => p.pos === 'Reves'));
-    let chicosDrive = shuffle(chicos.filter(p => p.pos === 'Drive'));
-    let chicosPoli  = shuffle(chicos.filter(p => p.pos === 'Polivalente'));
+    let b1Reves = shuffle(chicos.filter(p => p.pos === 'Reves'));
+    let b1Drive = shuffle(chicos.filter(p => p.pos === 'Drive'));
+    let b1Poli  = shuffle(chicos.filter(p => p.pos === 'Polivalente'));
 
-    let chicasReves = shuffle(chicas.filter(p => p.pos === 'Reves'));
-    let chicasDrive = shuffle(chicas.filter(p => p.pos === 'Drive'));
-    let chicasPoli  = shuffle(chicas.filter(p => p.pos === 'Polivalente'));
+    let b2Reves = shuffle(chicas.filter(p => p.pos === 'Reves'));
+    let b2Drive = shuffle(chicas.filter(p => p.pos === 'Drive'));
+    let b2Poli  = shuffle(chicas.filter(p => p.pos === 'Polivalente'));
 
-    while (chicasPoli.length > 0) {
-      const p = chicasPoli.pop();
-      if ((chicosReves.length - chicasDrive.length) > (chicosDrive.length - chicasReves.length)) {
-        chicasDrive.push(p);
+    // Distribuir polivalentes para compensar
+    while (b2Poli.length > 0) {
+      const p = b2Poli.pop();
+      if ((b1Reves.length - b2Drive.length) >= (b1Drive.length - b2Reves.length)) {
+        b2Drive.push(p);
       } else {
-        chicasReves.push(p);
+        b2Reves.push(p);
       }
     }
 
-    while (chicosPoli.length > 0) {
-      const p = chicosPoli.pop();
-      if ((chicasDrive.length - chicosReves.length) > (chicasReves.length - chicosDrive.length)) {
-        chicosReves.push(p);
+    while (b1Poli.length > 0) {
+      const p = b1Poli.pop();
+      if ((b2Drive.length - b1Reves.length) >= (b2Reves.length - b1Drive.length)) {
+        b1Reves.push(p);
       } else {
-        chicosDrive.push(p);
+        b1Drive.push(p);
       }
     }
 
-    while (chicosReves.length > chicosDrive.length && chicosReves.length > 0) chicosDrive.push(chicosReves.pop());
-    while (chicosDrive.length > chicosReves.length && chicosDrive.length > 0) chicosReves.push(chicosDrive.pop());
-    while (chicasDrive.length > chicosReves.length && chicasDrive.length > 0) chicasReves.push(chicasDrive.pop());
-    while (chicasReves.length > chicosDrive.length && chicasReves.length > 0) chicosDrive.push(chicasReves.pop());
+    // Igualar exactamente las cantidades para que no quede nadie fuera
+    while (b1Reves.length > b2Drive.length) {
+      b1Drive.push(b1Reves.pop());
+    }
+    while (b2Drive.length > b1Reves.length) {
+      b2Reves.push(b2Drive.pop());
+    }
+    while (b1Drive.length > b2Reves.length) {
+      b1Reves.push(b1Drive.pop());
+    }
+    while (b2Reves.length > b1Drive.length) {
+      b2Drive.push(b2Reves.pop());
+    }
 
     const pairs = [];
-    const t1 = Math.min(chicosReves.length, chicasDrive.length);
-    for (let i = 0; i < t1; i++) pairs.push({ id: pairs.length + 1, p1: chicosReves[i], p2: chicasDrive[i] });
-    const t2 = Math.min(chicosDrive.length, chicasReves.length);
-    for (let i = 0; i < t2; i++) pairs.push({ id: pairs.length + 1, p1: chicosDrive[i], p2: chicasReves[i] });
-
-    // AJUSTE AUTOMÁTICO PARA MARTA: Descansar en Ronda 1 (Pareja 13)
-    // En ambos calendarios (28 y 32), la Pareja 13 siempre descansa en la Ronda 1.
-    const martaPairIndex = pairs.findIndex(p => 
-      p.p1.name.trim().toLowerCase().includes('marta') || 
-      p.p2.name.trim().toLowerCase().includes('marta')
-    );
-
-    if (martaPairIndex !== -1 && martaPairIndex !== 12) {
-      // Intercambiar los componentes de la pareja de Marta con la pareja 13 (índice 12)
-      const pMarta = pairs[martaPairIndex];
-      const p13 = pairs[12];
-
-      const tempP1 = pMarta.p1;
-      const tempP2 = pMarta.p2;
-
-      pMarta.p1 = p13.p1;
-      pMarta.p2 = p13.p2;
-
-      p13.p1 = tempP1;
-      p13.p2 = tempP2;
+    // Formar parejas Revés Bombo 1 con Drive Bombo 2
+    for (let i = 0; i < b1Reves.length; i++) {
+      pairs.push({ id: pairs.length + 1, p1: b1Reves[i], p2: b2Drive[i] });
+    }
+    // Formar parejas Drive Bombo 1 con Revés Bombo 2
+    for (let i = 0; i < b1Drive.length; i++) {
+      pairs.push({ id: pairs.length + 1, p1: b1Drive[i], p2: b2Reves[i] });
     }
 
     state.pairs = pairs;
     return true;
   }
 
-  function checkMartaNotice() {
-    const hasMarta = state.pairs.some(p => 
-      p.id === 13 && (p.p1.name.toLowerCase().includes('marta') || p.p2.name.toLowerCase().includes('marta'))
-    );
-    const notice = document.getElementById('marta-notice');
-    if (notice) notice.style.display = hasMarta ? 'block' : 'none';
-  }
-
   function startPairReview() {
-    if (state.players.length !== state.mode) return alert(`Se necesitan exactamente ${state.mode} jugadores para esta modalidad.`);
+    if (state.players.length !== 32) return alert('Se necesitan exactamente 32 jugadores (16 en cada bombo).');
     if (!buildPairsAlgorithm()) return;
 
     state.screen = 'review';
@@ -704,25 +506,20 @@
     const container = document.getElementById('pairs-review-container');
     container.innerHTML = '';
 
-    const chicos = state.players.filter(p => p.gender === 'H');
-    const chicas = state.players.filter(p => p.gender === 'M');
-
-    checkMartaNotice();
+    const b1 = state.players.filter(p => p.gender === 'H');
+    const b2 = state.players.filter(p => p.gender === 'M');
 
     state.pairs.forEach((pair, pairIdx) => {
       const card = document.createElement('div');
       card.className = 'pair-edit-card';
 
-      const containsMarta = pair.p1.name.toLowerCase().includes('marta') || pair.p2.name.toLowerCase().includes('marta');
-      const martaTag = containsMarta ? `<div class="marta-badge">🕒 Descansa Ronda 1</div>` : '';
-
-      let optionsChicos = chicos.map(c => `
+      let optionsB1 = b1.map(c => `
         <option value="${c.name}" ${c.name === pair.p1.name ? 'selected' : ''}>
           ${c.name} (${c.pos})
         </option>
       `).join('');
 
-      let optionsChicas = chicas.map(c => `
+      let optionsB2 = b2.map(c => `
         <option value="${c.name}" ${c.name === pair.p2.name ? 'selected' : ''}>
           ${c.name} (${c.pos})
         </option>
@@ -730,14 +527,13 @@
 
       card.innerHTML = `
         <div class="pair-edit-title">Pareja ${pair.id}</div>
-        ${martaTag}
         <div class="pair-select-row">
-          <label>Chico:</label>
-          <select onchange="swapPlayer(${pairIdx}, 'H', this.value)">${optionsChicos}</select>
+          <label>Bombo 1:</label>
+          <select onchange="swapPlayer(${pairIdx}, 'H', this.value)">${optionsB1}</select>
         </div>
         <div class="pair-select-row">
-          <label>Chica:</label>
-          <select onchange="swapPlayer(${pairIdx}, 'M', this.value)">${optionsChicas}</select>
+          <label>Bombo 2:</label>
+          <select onchange="swapPlayer(${pairIdx}, 'M', this.value)">${optionsB2}</select>
         </div>
       `;
       container.appendChild(card);
@@ -783,7 +579,6 @@
     state.locked = true;
     state.screen = 'tournament';
     state.activeTab = 'r1';
-    state.expandedPairId = null;
     saveState();
     showTournament();
   }
@@ -835,8 +630,7 @@
       const roundView = document.getElementById('round-view');
       roundView.classList.remove('hidden');
       const roundNum = parseInt(state.activeTab.replace('r', ''));
-      const sched = getCurrentSchedule();
-      const roundData = sched.find(s => s.ronda === roundNum);
+      const roundData = SCHEDULE.find(s => s.ronda === roundNum);
 
       let html = `<h2>Ronda ${roundNum} (20 min + 5 min cambio)</h2>`;
 
@@ -903,17 +697,15 @@
   }
 
   function calculateStandings() {
-    const sched = getCurrentSchedule();
     const stats = state.pairs.map(p => ({
       id: p.id,
       pairObj: p,
       name: `P${p.id}: ${p.p1.name} & ${p.p2.name}`,
       pj: 0, pg: 0, pe: 0, pp: 0, jf: 0, jc: 0, pts: 0, dif: 0,
-      ratioPts: 0, ratioDif: 0, ratioJf: 0,
       rests: getRestRoundsForPair(p.id)
     }));
 
-    sched.forEach(r => {
+    SCHEDULE.forEach(r => {
       r.partidos.forEach((p, idx) => {
         const sc = state.scores[`${r.ronda}-${idx}`];
         if (sc && sc.j1 !== '' && sc.j2 !== '' && !isNaN(sc.j1) && !isNaN(sc.j2)) {
@@ -933,89 +725,9 @@
       });
     });
 
-    stats.forEach(t => {
-      t.dif = t.jf - t.jc;
-      t.ratioPts = t.pj > 0 ? (t.pts / t.pj) : 0;
-      t.ratioDif = t.pj > 0 ? (t.dif / t.pj) : 0;
-      t.ratioJf = t.pj > 0 ? (t.jf / t.pj) : 0;
-    });
-
-    stats.sort((a, b) => b.ratioPts - a.ratioPts || b.ratioDif - a.ratioDif || b.ratioJf - a.ratioJf);
+    stats.forEach(t => t.dif = t.jf - t.jc);
+    stats.sort((a, b) => b.pts - a.pts || b.dif - a.dif || b.jf - a.jf);
     return stats;
-  }
-
-  function getPairRoundsDetailHtml(pairId) {
-    const sched = getCurrentSchedule();
-    let html = `<div class="detail-box">`;
-
-    sched.forEach(r => {
-      if (r.descansan.includes(pairId)) {
-        html += `
-          <div class="round-detail-item">
-            <span class="round-label">Ronda ${r.ronda}</span>
-            <span class="rival-label" style="font-style: italic; color: #94a3b8;">Descanso programado</span>
-            <span class="score-badge res-rest">☕ Descanso</span>
-          </div>
-        `;
-      } else {
-        const matchIdx = r.partidos.findIndex(m => m[0] === pairId || m[1] === pairId);
-        if (matchIdx !== -1) {
-          const m = r.partidos[matchIdx];
-          const isT1 = m[0] === pairId;
-          const rivalId = isT1 ? m[1] : m[0];
-          const rivalPair = state.pairs.find(p => p.id === rivalId);
-          const rivalName = rivalPair ? `P${rivalPair.id} (${rivalPair.p1.name}/${rivalPair.p2.name})` : `P${rivalId}`;
-
-          const sc = state.scores[`${r.ronda}-${matchIdx}`];
-          if (sc && sc.j1 !== '' && sc.j2 !== '' && !isNaN(sc.j1) && !isNaN(sc.j2)) {
-            const myScore = isT1 ? parseInt(sc.j1, 10) : parseInt(sc.j2, 10);
-            const rivalScore = isT1 ? parseInt(sc.j2, 10) : parseInt(sc.j1, 10);
-
-            let resClass = '';
-            let resText = '';
-
-            if (myScore > rivalScore) {
-              resClass = 'res-win';
-              resText = `G ${myScore}-${rivalScore}`;
-            } else if (myScore < rivalScore) {
-              resClass = 'res-loss';
-              resText = `P ${myScore}-${rivalScore}`;
-            } else {
-              resClass = 'res-draw';
-              resText = `E ${myScore}-${rivalScore}`;
-            }
-
-            html += `
-              <div class="round-detail-item">
-                <span class="round-label">Ronda ${r.ronda}</span>
-                <span class="rival-label">vs ${rivalName}</span>
-                <span class="score-badge ${resClass}">${resText}</span>
-              </div>
-            `;
-          } else {
-            html += `
-              <div class="round-detail-item">
-                <span class="round-label">Ronda ${r.ronda}</span>
-                <span class="rival-label">vs ${rivalName}</span>
-                <span class="score-badge res-pending">Pendiente</span>
-              </div>
-            `;
-          }
-        }
-      }
-    });
-
-    html += `</div>`;
-    return html;
-  }
-
-  function toggleExpandPair(pairId) {
-    if (state.expandedPairId === pairId) {
-      state.expandedPairId = null;
-    } else {
-      state.expandedPairId = pairId;
-    }
-    renderSidebarStandings();
   }
 
   function renderSidebarStandings() {
@@ -1035,33 +747,18 @@
         tagHtml = '<span class="tag-badge tag-silver">Plata</span>';
       }
 
-      const restBadges = t.rests.length > 0 
-        ? t.rests.map(r => `<span class="tag-rest">R${r}</span>`).join(' ')
-        : '<span class="tag-rest">-</span>';
-      const difSign = t.ratioDif > 0 ? '+' : '';
-      const isExpanded = state.expandedPairId === t.id;
-      const arrowIcon = isExpanded ? '▼' : '▶';
+      const restBadges = t.rests.map(r => `<span class="tag-rest">R${r}</span>`).join(' ');
 
       tbody.innerHTML += `
-        <tr class="${rowClass} row-clickable" onclick="toggleExpandPair(${t.id})">
+        <tr class="${rowClass}">
           <td><strong>${i + 1}º</strong></td>
-          <td><span style="color:#38bdf8; font-size:0.75rem; margin-right:4px;">${arrowIcon}</span><strong>${t.name}</strong> ${tagHtml}</td>
-          <td>${t.pj}</td>
-          <td><strong>${t.ratioPts.toFixed(2)}</strong> <span style="font-size:0.68rem; color:var(--text-muted);">(${t.pts}p)</span></td>
-          <td>${difSign}${t.ratioDif.toFixed(2)} <span style="font-size:0.68rem; color:var(--text-muted);">(${t.dif > 0 ? '+' : ''}${t.dif})</span></td>
+          <td>${t.name} ${tagHtml}</td>
+          <td><strong>${t.pj}</strong></td>
+          <td><strong>${t.pts}</strong></td>
+          <td>${t.dif > 0 ? '+' : ''}${t.dif} (${t.jf}-${t.jc})</td>
           <td>${t.rests.length} (${restBadges})</td>
         </tr>
       `;
-
-      if (isExpanded) {
-        tbody.innerHTML += `
-          <tr class="detail-row">
-            <td colspan="6">
-              ${getPairRoundsDetailHtml(t.id)}
-            </td>
-          </tr>
-        `;
-      }
     });
   }
 
@@ -1077,7 +774,6 @@
     const [p1, p2, p3, p4, p5, p6, p7, p8] = standings;
     const f = state.finalScores;
 
-    // Cuadro de Oro
     let wSF1 = null, lSF1 = null, wSF2 = null, lSF2 = null, champGold = null;
     if (f.sf1.j1 !== '' && f.sf1.j2 !== '') {
       if (parseInt(f.sf1.j1) > parseInt(f.sf1.j2)) { wSF1 = p1; lSF1 = p4; }
@@ -1092,7 +788,6 @@
       else if (parseInt(f.final.j2) > parseInt(f.final.j1)) champGold = wSF2;
     }
 
-    // Cuadro de Plata
     let wCSF1 = null, wCSF2 = null, champSilver = null;
     if (f.cons_sf1.j1 !== '' && f.cons_sf1.j2 !== '') {
       if (parseInt(f.cons_sf1.j1) > parseInt(f.cons_sf1.j2)) wCSF1 = p5;
@@ -1108,21 +803,15 @@
     }
 
     let html = `
-      <!-- CUADRO PRINCIPAL (ORO) -->
       <div class="bracket-section bracket-gold">
         <h3 style="color: var(--gold); text-align: left;">🥇 Cuadro de Honor (Puestos 1º al 4º)</h3>
-        
         <div class="match-card">
           <div class="pista-header"><span>SEMIFINAL 1 (1º vs 4º)</span></div>
           <div class="match-body">
             <div class="team"><strong>${p1.name}</strong> (1º)</div>
-            <select class="score-select" onchange="updateFinalScore('sf1', 'j1', this.value)">
-              ${getScoreOptions(f.sf1.j1)}
-            </select>
+            <select class="score-select" onchange="updateFinalScore('sf1', 'j1', this.value)">${getScoreOptions(f.sf1.j1)}</select>
             <span>vs</span>
-            <select class="score-select" onchange="updateFinalScore('sf1', 'j2', this.value)">
-              ${getScoreOptions(f.sf1.j2)}
-            </select>
+            <select class="score-select" onchange="updateFinalScore('sf1', 'j2', this.value)">${getScoreOptions(f.sf1.j2)}</select>
             <div class="team right"><strong>${p4.name}</strong> (4º)</div>
           </div>
         </div>
@@ -1131,13 +820,9 @@
           <div class="pista-header"><span>SEMIFINAL 2 (2º vs 3º)</span></div>
           <div class="match-body">
             <div class="team"><strong>${p2.name}</strong> (2º)</div>
-            <select class="score-select" onchange="updateFinalScore('sf2', 'j1', this.value)">
-              ${getScoreOptions(f.sf2.j1)}
-            </select>
+            <select class="score-select" onchange="updateFinalScore('sf2', 'j1', this.value)">${getScoreOptions(f.sf2.j1)}</select>
             <span>vs</span>
-            <select class="score-select" onchange="updateFinalScore('sf2', 'j2', this.value)">
-              ${getScoreOptions(f.sf2.j2)}
-            </select>
+            <select class="score-select" onchange="updateFinalScore('sf2', 'j2', this.value)">${getScoreOptions(f.sf2.j2)}</select>
             <div class="team right"><strong>${p3.name}</strong> (3º)</div>
           </div>
         </div>
@@ -1146,13 +831,9 @@
           <div class="pista-header"><span style="color: var(--gold);">👑 GRAN FINAL DE ORO</span></div>
           <div class="match-body">
             <div class="team">${wSF1 ? `<strong>${wSF1.name}</strong>` : '<em>Ganador SF1</em>'}</div>
-            <select class="score-select" ${!wSF1 || !wSF2 ? 'disabled' : ''} onchange="updateFinalScore('final', 'j1', this.value)">
-              ${getScoreOptions(f.final.j1)}
-            </select>
+            <select class="score-select" ${!wSF1 || !wSF2 ? 'disabled' : ''} onchange="updateFinalScore('final', 'j1', this.value)">${getScoreOptions(f.final.j1)}</select>
             <span>vs</span>
-            <select class="score-select" ${!wSF1 || !wSF2 ? 'disabled' : ''} onchange="updateFinalScore('final', 'j2', this.value)">
-              ${getScoreOptions(f.final.j2)}
-            </select>
+            <select class="score-select" ${!wSF1 || !wSF2 ? 'disabled' : ''} onchange="updateFinalScore('final', 'j2', this.value)">${getScoreOptions(f.final.j2)}</select>
             <div class="team right">${wSF2 ? `<strong>${wSF2.name}</strong>` : '<em>Ganador SF2</em>'}</div>
           </div>
         </div>
@@ -1163,33 +844,23 @@
           <div class="pista-header"><span>🥉 3º y 4º PUESTO</span></div>
           <div class="match-body">
             <div class="team">${lSF1 ? `<strong>${lSF1.name}</strong>` : '<em>Perdedor SF1</em>'}</div>
-            <select class="score-select" ${!lSF1 || !lSF2 ? 'disabled' : ''} onchange="updateFinalScore('bronze', 'j1', this.value)">
-              ${getScoreOptions(f.bronze.j1)}
-            </select>
+            <select class="score-select" ${!lSF1 || !lSF2 ? 'disabled' : ''} onchange="updateFinalScore('bronze', 'j1', this.value)">${getScoreOptions(f.bronze.j1)}</select>
             <span>vs</span>
-            <select class="score-select" ${!lSF1 || !lSF2 ? 'disabled' : ''} onchange="updateFinalScore('bronze', 'j2', this.value)">
-              ${getScoreOptions(f.bronze.j2)}
-            </select>
+            <select class="score-select" ${!lSF1 || !lSF2 ? 'disabled' : ''} onchange="updateFinalScore('bronze', 'j2', this.value)">${getScoreOptions(f.bronze.j2)}</select>
             <div class="team right">${lSF2 ? `<strong>${lSF2.name}</strong>` : '<em>Perdedor SF2</em>'}</div>
           </div>
         </div>
       </div>
 
-      <!-- CUADRO DE CONSOLACIÓN (PLATA) -->
       <div class="bracket-section bracket-silver">
         <h3 style="color: #94a3b8; text-align: left;">🥈 Cuadro de Consolación (Puestos 5º al 8º)</h3>
-        
         <div class="match-card">
           <div class="pista-header"><span>SEMIFINAL PLATA 1 (5º vs 8º)</span></div>
           <div class="match-body">
             <div class="team"><strong>${p5.name}</strong> (5º)</div>
-            <select class="score-select" onchange="updateFinalScore('cons_sf1', 'j1', this.value)">
-              ${getScoreOptions(f.cons_sf1.j1)}
-            </select>
+            <select class="score-select" onchange="updateFinalScore('cons_sf1', 'j1', this.value)">${getScoreOptions(f.cons_sf1.j1)}</select>
             <span>vs</span>
-            <select class="score-select" onchange="updateFinalScore('cons_sf1', 'j2', this.value)">
-              ${getScoreOptions(f.cons_sf1.j2)}
-            </select>
+            <select class="score-select" onchange="updateFinalScore('cons_sf1', 'j2', this.value)">${getScoreOptions(f.cons_sf1.j2)}</select>
             <div class="team right"><strong>${p8.name}</strong> (8º)</div>
           </div>
         </div>
@@ -1198,13 +869,9 @@
           <div class="pista-header"><span>SEMIFINAL PLATA 2 (6º vs 7º)</span></div>
           <div class="match-body">
             <div class="team"><strong>${p6.name}</strong> (6º)</div>
-            <select class="score-select" onchange="updateFinalScore('cons_sf2', 'j1', this.value)">
-              ${getScoreOptions(f.cons_sf2.j1)}
-            </select>
+            <select class="score-select" onchange="updateFinalScore('cons_sf2', 'j1', this.value)">${getScoreOptions(f.cons_sf2.j1)}</select>
             <span>vs</span>
-            <select class="score-select" onchange="updateFinalScore('cons_sf2', 'j2', this.value)">
-              ${getScoreOptions(f.cons_sf2.j2)}
-            </select>
+            <select class="score-select" onchange="updateFinalScore('cons_sf2', 'j2', this.value)">${getScoreOptions(f.cons_sf2.j2)}</select>
             <div class="team right"><strong>${p7.name}</strong> (7º)</div>
           </div>
         </div>
@@ -1213,13 +880,9 @@
           <div class="pista-header"><span style="color: #cbd5e1;">FINAL DE CONSOLACIÓN (PLATA)</span></div>
           <div class="match-body">
             <div class="team">${wCSF1 ? `<strong>${wCSF1.name}</strong>` : '<em>Ganador SF Plata 1</em>'}</div>
-            <select class="score-select" ${!wCSF1 || !wCSF2 ? 'disabled' : ''} onchange="updateFinalScore('cons_final', 'j1', this.value)">
-              ${getScoreOptions(f.cons_final.j1)}
-            </select>
+            <select class="score-select" ${!wCSF1 || !wCSF2 ? 'disabled' : ''} onchange="updateFinalScore('cons_final', 'j1', this.value)">${getScoreOptions(f.cons_final.j1)}</select>
             <span>vs</span>
-            <select class="score-select" ${!wCSF1 || !wCSF2 ? 'disabled' : ''} onchange="updateFinalScore('cons_final', 'j2', this.value)">
-              ${getScoreOptions(f.cons_final.j2)}
-            </select>
+            <select class="score-select" ${!wCSF1 || !wCSF2 ? 'disabled' : ''} onchange="updateFinalScore('cons_final', 'j2', this.value)">${getScoreOptions(f.cons_final.j2)}</select>
             <div class="team right">${wCSF2 ? `<strong>${wCSF2.name}</strong>` : '<em>Ganador SF Plata 2</em>'}</div>
           </div>
         </div>
@@ -1234,45 +897,51 @@
   function confirmReset() {
     if (confirm('¿ATENCIÓN: Quieres borrar los resultados y reiniciar el torneo?')) {
       if (confirm('¿Confirmas de verdad? Esta acción no se puede deshacer.')) {
-        localStorage.removeItem('padel_torneo_data_v14');
+        localStorage.removeItem('padel_torneo_data_v11');
         location.reload();
       }
     }
   }
 
-  function loadDemoData() {
-    const is28 = state.mode === 28;
-    const target = is28 ? 14 : 16;
-    
-    const demoH = [
-      { name: 'Carlos', pos: 'Reves' }, { name: 'Mario', pos: 'Reves' },
-      { name: 'Javier', pos: 'Reves' }, { name: 'Pablo', pos: 'Reves' },
-      { name: 'David', pos: 'Drive' }, { name: 'Sergio', pos: 'Drive' },
-      { name: 'Lucas', pos: 'Drive' }, { name: 'Jorge', pos: 'Drive' },
-      { name: 'Raúl', pos: 'Polivalente' }, { name: 'Víctor', pos: 'Polivalente' },
-      { name: 'Álvaro', pos: 'Polivalente' }, { name: 'Manuel', pos: 'Polivalente' },
-      { name: 'Hugo', pos: 'Polivalente' }, { name: 'Marcos', pos: 'Polivalente' },
-      { name: 'Iván', pos: 'Polivalente' }, { name: 'Rubén', pos: 'Polivalente' }
+  // Carga tu lista exacta balanceando 16 chicos y 16 jugadoras/iniciación
+  function loadExactUserData() {
+    state.players = [
+      // 16 en Bombo 1 (Chicos)
+      { name: 'ANTONIO SOLA', gender: 'H', pos: 'Drive' },
+      { name: 'ELADIO', gender: 'H', pos: 'Reves' },
+      { name: 'FERMIN', gender: 'H', pos: 'Polivalente' },
+      { name: 'WILLY', gender: 'H', pos: 'Polivalente' },
+      { name: 'VERDU', gender: 'H', pos: 'Reves' },
+      { name: 'EDU', gender: 'H', pos: 'Drive' },
+      { name: 'HECTOR', gender: 'H', pos: 'Reves' },
+      { name: 'JULIO', gender: 'H', pos: 'Drive' },
+      { name: 'VICTOR', gender: 'H', pos: 'Drive' },
+      { name: 'JUANJO', gender: 'H', pos: 'Polivalente' },
+      { name: 'DANI GIL', gender: 'H', pos: 'Polivalente' },
+      { name: 'ISRA', gender: 'H', pos: 'Drive' },
+      { name: 'SALAS', gender: 'H', pos: 'Drive' },
+      { name: 'CHINO', gender: 'H', pos: 'Polivalente' },
+      { name: 'CHIKITIN', gender: 'H', pos: 'Drive' },
+      { name: 'CARLOS', gender: 'H', pos: 'Reves' },
+
+      // 16 en Bombo 2 (Chicas + Dani Julio + Iker)
+      { name: 'DANI JULIO', gender: 'M', pos: 'Reves' },
+      { name: 'IKER', gender: 'M', pos: 'Reves' },
+      { name: 'CHONI', gender: 'M', pos: 'Drive' },
+      { name: 'ALI PEKE', gender: 'M', pos: 'Polivalente' },
+      { name: 'ALI BURI', gender: 'M', pos: 'Reves' },
+      { name: 'ANA G', gender: 'M', pos: 'Reves' },
+      { name: 'DAVINIA', gender: 'M', pos: 'Reves' },
+      { name: 'ELI', gender: 'M', pos: 'Drive' },
+      { name: 'ESME LORCA', gender: 'M', pos: 'Reves' },
+      { name: 'TANIA', gender: 'M', pos: 'Reves' },
+      { name: 'VANE', gender: 'M', pos: 'Drive' },
+      { name: 'ANA ROJAS', gender: 'M', pos: 'Reves' },
+      { name: 'MARTA', gender: 'M', pos: 'Polivalente' },
+      { name: 'MACA', gender: 'M', pos: 'Reves' },
+      { name: 'PEREZ', gender: 'M', pos: 'Polivalente' },
+      { name: 'ELENA', gender: 'M', pos: 'Drive' }
     ];
-
-    const demoM = [
-      { name: 'Elena', pos: 'Drive' }, { name: 'Lucía', pos: 'Drive' },
-      { name: 'Marta', pos: 'Drive' }, { name: 'Paula', pos: 'Drive' },
-      { name: 'Ana', pos: 'Reves' }, { name: 'Sara', pos: 'Reves' },
-      { name: 'Laura', pos: 'Reves' }, { name: 'Carmen', pos: 'Reves' },
-      { name: 'Clara', pos: 'Polivalente' }, { name: 'Sofía', pos: 'Polivalente' },
-      { name: 'Irene', pos: 'Polivalente' }, { name: 'Patricia', pos: 'Polivalente' },
-      { name: 'María', pos: 'Polivalente' }, { name: 'Bea', pos: 'Polivalente' },
-      { name: 'Alba', pos: 'Polivalente' }, { name: 'Nuria', pos: 'Polivalente' }
-    ];
-
-    const finalPlayers = [];
-    for (let i = 0; i < target; i++) {
-      finalPlayers.push({ name: demoH[i].name, gender: 'H', pos: demoH[i].pos });
-      finalPlayers.push({ name: demoM[i].name, gender: 'M', pos: demoM[i].pos });
-    }
-
-    state.players = finalPlayers;
     renderPlayers();
     saveState();
   }
